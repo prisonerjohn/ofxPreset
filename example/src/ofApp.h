@@ -77,7 +77,7 @@ public:
 
 		struct : ofParameterGroup
 		{
-			ofxPreset::Parameter<bool> enabled{ "Enabled", true };
+			ofxPreset::Parameter<bool> enabled{ "Enabled", true, true };
 			ofxPreset::Parameter<float> sizeMin{ "Size Min", 10.0f, 0.0f, 1000.0f };
 			ofxPreset::Parameter<float> sizeMax{ "Size Max", 200.0f, 0.0f, 1000.0f };
 			ofxPreset::Parameter<float> speed{ "Speed", 0.1f, 0.0f, 1.0f };
@@ -89,9 +89,10 @@ public:
 		{
 			ofxPreset::Parameter<int> fillMode{ "Fill Mode", RenderModeTexture };
 			ofxPreset::Parameter<int> strokeMode{ "Stroke Mode", RenderModeNone };
+			ofxPreset::Parameter<bool> preview{ "Preview", false, true };
 			ofParameter<string> imagePath{ "Image Path", "texture.jpg" };
 
-			PARAM_DECLARE("Render", fillMode, strokeMode, imagePath);
+			PARAM_DECLARE("Render", fillMode, strokeMode, preview, imagePath);
 		} render;
 
 		PARAM_DECLARE("App", colors, camera, mesh, render);

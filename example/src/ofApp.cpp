@@ -316,9 +316,27 @@ void ofApp::imGui()
 
 					ImGui::TreePop();
 				}
+
+				if (this->texture.isAllocated())
+				{
+					ofxPreset::Gui::AddParameter(this->parameters.render.preview);
+				}
 			}
 		}
-		this->mouseOverGui = ofxPreset::Gui::EndWindow(windowPos, windowSize);
+		this->mouseOverGui |= ofxPreset::Gui::EndWindow(windowPos, windowSize);
+
+		if (this->parameters.render.preview)
+		{
+			static const float kPreviewSize = 256.0f;
+			auto previewPos = ofVec2f(ofGetWidth() - kPreviewSize - kGuiMargin * 3, kGuiMargin);
+			auto previewSize = ofVec2f(kPreviewSize, kPreviewSize);
+
+			if (ofxPreset::Gui::BeginWindow(this->parameters.render.preview, previewPos, previewSize, false))
+			{
+				ofxPreset::Gui::AddImage(this->texture, previewSize);
+			}
+			this->mouseOverGui |= ofxPreset::Gui::EndWindow(previewPos, previewSize);
+		}
 	}
 	this->gui.end();
 }
