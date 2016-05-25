@@ -1,0 +1,140 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="src\ofApp.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ofxImGui\src\BaseEngine.cpp">
+      <Filter>addons\ofxImGui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ofxImGui\src\BaseTheme.cpp">
+      <Filter>addons\ofxImGui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ofxImGui\src\EngineGLFW.cpp">
+      <Filter>addons\ofxImGui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ofxImGui\src\EngineOpenGLES.cpp">
+      <Filter>addons\ofxImGui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ofxImGui\src\ofxImGui.cpp">
+      <Filter>addons\ofxImGui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ofxImGui\libs\imgui\src\imgui.cpp">
+      <Filter>addons\ofxImGui\libs\imgui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ofxImGui\libs\imgui\src\imgui_demo.cpp">
+      <Filter>addons\ofxImGui\libs\imgui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ofxImGui\libs\imgui\src\imgui_draw.cpp">
+      <Filter>addons\ofxImGui\libs\imgui\src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{d8376475-7454-4a24-b08a-aac121d3ad6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons">
+      <UniqueIdentifier>{069f5eeb-250d-441f-ba6b-d63ccf99dc12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxPreset">
+      <UniqueIdentifier>{fb86f6e4-be24-4f5a-b24a-12c5d803816a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxPreset\src">
+      <UniqueIdentifier>{f7976572-2a36-4b92-8cc7-955a04cd8525}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxPreset\libs">
+      <UniqueIdentifier>{f11114c8-d3ef-4e0a-b360-9cf91e6d378c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxPreset\libs\ofxPreset">
+      <UniqueIdentifier>{b742f287-ea10-4c07-9085-3ee4460d82c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxPreset\libs\ofxPreset\include">
+      <UniqueIdentifier>{01cccd8c-cfa7-4ecd-b36a-a09530071dc8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxImGui">
+      <UniqueIdentifier>{a67bee51-524f-413d-b5ae-5b29d35b47c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxImGui\src">
+      <UniqueIdentifier>{bf00251d-45cc-43a0-b8c6-db4ff2b69124}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxImGui\libs">
+      <UniqueIdentifier>{caab777d-856b-4d11-8f29-3c6516a0d95b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxImGui\libs\imgui">
+      <UniqueIdentifier>{bdad4ec2-1937-46b7-a3b4-3bb7e1dbd69b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxImGui\libs\imgui\src">
+      <UniqueIdentifier>{a50daa91-db70-4847-899a-3b3a82b0d88d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\ofApp.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ofxPreset.h">
+      <Filter>addons\ofxPreset\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\ofxPreset\include\Gui.h">
+      <Filter>addons\ofxPreset\libs\ofxPreset\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\ofxPreset\include\Parameter.h">
+      <Filter>addons\ofxPreset\libs\ofxPreset\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\ofxPreset\include\Serializer.h">
+      <Filter>addons\ofxPreset\libs\ofxPreset\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ofxImGui\src\BaseEngine.h">
+      <Filter>addons\ofxImGui\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ofxImGui\src\BaseTheme.h">
+      <Filter>addons\ofxImGui\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ofxImGui\src\EngineGLFW.h">
+      <Filter>addons\ofxImGui\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ofxImGui\src\EngineOpenGLES.h">
+      <Filter>addons\ofxImGui\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ofxImGui\src\imconfig.h">
+      <Filter>addons\ofxImGui\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ofxImGui\src\ofxImGui.h">
+      <Filter>addons\ofxImGui\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ofxImGui\src\ThemeTest.h">
+      <Filter>addons\ofxImGui\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ofxImGui\libs\imgui\src\imgui.h">
+      <Filter>addons\ofxImGui\libs\imgui\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ofxImGui\libs\imgui\src\imgui_internal.h">
+      <Filter>addons\ofxImGui\libs\imgui\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ofxImGui\libs\imgui\src\stb_rect_pack.h">
+      <Filter>addons\ofxImGui\libs\imgui\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ofxImGui\libs\imgui\src\stb_textedit.h">
+      <Filter>addons\ofxImGui\libs\imgui\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ofxImGui\libs\imgui\src\stb_truetype.h">
+      <Filter>addons\ofxImGui\libs\imgui\src</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="icon.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\libs\ofxPreset\include\Gui.inl">
+      <Filter>addons\ofxPreset\libs\ofxPreset\include</Filter>
+    </None>
+    <None Include="..\libs\ofxPreset\include\Parameter.inl">
+      <Filter>addons\ofxPreset\libs\ofxPreset\include</Filter>
+    </None>
+    <None Include="..\libs\ofxPreset\include\Serializer.inl">
+      <Filter>addons\ofxPreset\libs\ofxPreset\include</Filter>
+    </None>
+  </ItemGroup>
+</Project>
