@@ -3,29 +3,36 @@
 namespace ofxPreset
 {
 	//--------------------------------------------------------------
-	bool Gui::BeginWindow(Parameter<bool> & parameter, const ofVec2f & pos, const ofVec2f & size, bool collapse)
+	void Gui::SetNextWindow(GuiSettings & settings)
 	{
-		return Gui::BeginWindow(parameter.getName(), pos, size, collapse, parameter.getRef());
+		settings.windowSize.x = 0;
+		settings.windowPos.y += settings.windowSize.y + kGuiMargin;
+	}
+
+	//--------------------------------------------------------------
+	bool Gui::BeginWindow(Parameter<bool> & parameter, const GuiSettings & settings, bool collapse)
+	{
+		return Gui::BeginWindow(parameter.getName(), settings, collapse, parameter.getRef());
 	}
 	
 	//--------------------------------------------------------------
-	bool Gui::BeginWindow(const string & name, const ofVec2f & pos, const ofVec2f & size, bool collapse, bool * opened)
+	bool Gui::BeginWindow(const string & name, const GuiSettings & settings, bool collapse, bool * opened)
 	{
-		ImGui::SetNextWindowPos(pos, ImGuiSetCond_Appearing);
-		ImGui::SetNextWindowSize(size, ImGuiSetCond_Appearing);
+		ImGui::SetNextWindowPos(settings.windowPos, ImGuiSetCond_Appearing);
+		ImGui::SetNextWindowSize(settings.windowSize, ImGuiSetCond_Appearing);
 		ImGui::SetNextWindowCollapsed(collapse, ImGuiSetCond_Appearing);
 		return ImGui::Begin(name.c_str(), opened, ImGuiWindowFlags_AlwaysAutoResize | (collapse ?  0 : ImGuiWindowFlags_NoCollapse));
 	}
 
 	//--------------------------------------------------------------
-	bool Gui::EndWindow(ofVec2f & pos, ofVec2f & size)
+	void Gui::EndWindow(GuiSettings & settings)
 	{
-		pos = ImGui::GetWindowPos();
-		size = ImGui::GetWindowSize();
+		settings.windowPos = ImGui::GetWindowPos();
+		settings.windowSize = ImGui::GetWindowSize();
 		ImGui::End();
 
-		const auto bounds = ofRectangle(pos, size.x, size.y);
-		return bounds.inside(ofGetMouseX(), ofGetMouseY());
+		const auto bounds = ofRectangle(settings.windowPos, settings.windowSize.x, settings.windowSize.y);
+		settings.mouseOverGui = bounds.inside(ofGetMouseX(), ofGetMouseY());
 	}
 
     //--------------------------------------------------------------

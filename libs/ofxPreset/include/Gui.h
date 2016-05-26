@@ -8,13 +8,22 @@ static const int kGuiMargin = 10;
 
 namespace ofxPreset
 {
+	struct GuiSettings
+	{
+		ofVec2f windowPos;
+		ofVec2f windowSize;
+		bool mouseOverGui;
+	};
+	
 	class Gui
 	{
 	public:
-		static inline bool BeginWindow(Parameter<bool> & parameter, const ofVec2f & pos, const ofVec2f & size, bool collapse = true);
-		static inline bool BeginWindow(const string & name, const ofVec2f & pos, const ofVec2f & size, bool collapse = true, bool * opened = nullptr);
+		static inline void SetNextWindow(GuiSettings & settings);
+
+		static inline bool BeginWindow(Parameter<bool> & parameter, const GuiSettings & settings, bool collapse = true);
+		static inline bool BeginWindow(const string & name, const GuiSettings & settings, bool collapse = true, bool * opened = nullptr);
 	
-		static inline bool EndWindow(ofVec2f & pos, ofVec2f & size);
+		static inline void EndWindow(GuiSettings & settings);
 	
         static inline bool AddParameter(Parameter<ofVec2f> & parameter);
         static inline bool AddParameter(Parameter<ofVec3f> & parameter);
