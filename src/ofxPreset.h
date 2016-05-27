@@ -1,5 +1,5 @@
 #pragma once
 
-#include "Gui.h"
-#include "Parameter.h"
-#include "Serializer.h"
+#include "ofxPreset/Gui.h"
+#include "ofxPreset/Parameter.h"
+#include "ofxPreset/Serializer.h"

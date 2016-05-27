@@ -45,15 +45,6 @@
     <Filter Include="addons\ofxPreset\src">
       <UniqueIdentifier>{f7976572-2a36-4b92-8cc7-955a04cd8525}</UniqueIdentifier>
     </Filter>
-    <Filter Include="addons\ofxPreset\libs">
-      <UniqueIdentifier>{f11114c8-d3ef-4e0a-b360-9cf91e6d378c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons\ofxPreset\libs\ofxPreset">
-      <UniqueIdentifier>{b742f287-ea10-4c07-9085-3ee4460d82c5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons\ofxPreset\libs\ofxPreset\include">
-      <UniqueIdentifier>{01cccd8c-cfa7-4ecd-b36a-a09530071dc8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="addons\ofxImGui">
       <UniqueIdentifier>{a67bee51-524f-413d-b5ae-5b29d35b47c7}</UniqueIdentifier>
     </Filter>
@@ -69,6 +60,9 @@
     <Filter Include="addons\ofxImGui\libs\imgui\src">
       <UniqueIdentifier>{a50daa91-db70-4847-899a-3b3a82b0d88d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="addons\ofxPreset\src\ofxPreset">
+      <UniqueIdentifier>{ed5ce760-e57c-4d99-8994-b5fc58cf8798}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ofApp.h">
@@ -76,15 +70,6 @@
     </ClInclude>
     <ClInclude Include="..\src\ofxPreset.h">
       <Filter>addons\ofxPreset\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\libs\ofxPreset\include\Gui.h">
-      <Filter>addons\ofxPreset\libs\ofxPreset\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\libs\ofxPreset\include\Parameter.h">
-      <Filter>addons\ofxPreset\libs\ofxPreset\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\libs\ofxPreset\include\Serializer.h">
-      <Filter>addons\ofxPreset\libs\ofxPreset\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ofxImGui\src\BaseEngine.h">
       <Filter>addons\ofxImGui\src</Filter>
@@ -122,19 +107,28 @@
     <ClInclude Include="..\..\ofxImGui\libs\imgui\src\stb_truetype.h">
       <Filter>addons\ofxImGui\libs\imgui\src</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\ofxPreset\Gui.h">
+      <Filter>addons\ofxPreset\src\ofxPreset</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ofxPreset\Parameter.h">
+      <Filter>addons\ofxPreset\src\ofxPreset</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ofxPreset\Serializer.h">
+      <Filter>addons\ofxPreset\src\ofxPreset</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="icon.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\libs\ofxPreset\include\Gui.inl">
-      <Filter>addons\ofxPreset\libs\ofxPreset\include</Filter>
+    <None Include="..\src\ofxPreset\Gui.inl">
+      <Filter>addons\ofxPreset\src\ofxPreset</Filter>
     </None>
-    <None Include="..\libs\ofxPreset\include\Parameter.inl">
-      <Filter>addons\ofxPreset\libs\ofxPreset\include</Filter>
+    <None Include="..\src\ofxPreset\Parameter.inl">
+      <Filter>addons\ofxPreset\src\ofxPreset</Filter>
     </None>
-    <None Include="..\libs\ofxPreset\include\Serializer.inl">
-      <Filter>addons\ofxPreset\libs\ofxPreset\include</Filter>
+    <None Include="..\src\ofxPreset\Serializer.inl">
+      <Filter>addons\ofxPreset\src\ofxPreset</Filter>
     </None>
   </ItemGroup>
 </Project>

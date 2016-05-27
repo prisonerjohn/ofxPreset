@@ -10,6 +10,13 @@ namespace ofxPreset
 {
 	struct GuiSettings
 	{
+		GuiSettings()
+		{
+			this->windowPos = ofVec2f(kGuiMargin, kGuiMargin);
+			this->windowSize = ofVec2f::zero();
+			this->mouseOverGui = false;
+		}
+		
 		ofVec2f windowPos;
 		ofVec2f windowSize;
 		bool mouseOverGui;
