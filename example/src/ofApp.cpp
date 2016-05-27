@@ -215,10 +215,9 @@ void ofApp::imGui()
 {
 	this->gui.begin();
 	{
-		auto windowPos = ofVec2f(kGuiMargin, kGuiMargin);
-		auto windowSize = ofVec2f::zero();
+		auto mainSettings = ofxPreset::GuiSettings();
 
-		if (ofxPreset::Gui::BeginWindow(this->parameters.getName(), windowPos, windowSize))
+		if (ofxPreset::Gui::BeginWindow(this->parameters.getName(), mainSettings))
 		{
 			ImGui::Text("%.1f FPS (%.3f ms/frame)", ofGetFrameRate(), 1000.0f / ImGui::GetIO().Framerate);
 
@@ -323,19 +322,20 @@ void ofApp::imGui()
 				}
 			}
 		}
-		this->mouseOverGui |= ofxPreset::Gui::EndWindow(windowPos, windowSize);
+		ofxPreset::Gui::EndWindow(mainSettings);
 
 		if (this->parameters.render.preview)
 		{
 			static const float kPreviewSize = 256.0f;
-			auto previewPos = ofVec2f(ofGetWidth() - kPreviewSize - kGuiMargin * 3, kGuiMargin);
-			auto previewSize = ofVec2f(kPreviewSize, kPreviewSize);
+			auto previewSettings = ofxPreset::GuiSettings();
+			previewSettings.windowPos = ofVec2f(ofGetWidth() - kPreviewSize - kGuiMargin * 3, kGuiMargin);
+			previewSettings.windowSize = ofVec2f(kPreviewSize, kPreviewSize);
 
-			if (ofxPreset::Gui::BeginWindow(this->parameters.render.preview, previewPos, previewSize, false))
+			if (ofxPreset::Gui::BeginWindow(this->parameters.render.preview, previewSettings, false))
 			{
-				ofxPreset::Gui::AddImage(this->texture, previewSize);
+				ofxPreset::Gui::AddImage(this->texture, previewSettings.windowSize);
 			}
-			this->mouseOverGui |= ofxPreset::Gui::EndWindow(previewPos, previewSize);
+			ofxPreset::Gui::EndWindow(previewSettings);
 		}
 	}
 	this->gui.end();
