@@ -32,7 +32,7 @@ namespace ofxPreset
 		ImGui::End();
 
 		const auto bounds = ofRectangle(settings.windowPos, settings.windowSize.x, settings.windowSize.y);
-		settings.mouseOverGui = bounds.inside(ofGetMouseX(), ofGetMouseY());
+		settings.mouseOverGui |= bounds.inside(ofGetMouseX(), ofGetMouseY());
 	}
 
     //--------------------------------------------------------------
