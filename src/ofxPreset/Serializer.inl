@@ -113,28 +113,27 @@ namespace ofxPreset
 	//--------------------------------------------------------------
 	const nlohmann::json & Serializer::Deserialize(const nlohmann::json & json, ofEasyCam & easyCam, const string & name)
 	{
+		if (!name.empty() && !json.count(name))
+		{
+			ofLogWarning("Serializer::Deserialize") << "Name " << name << " not found in JSON!";
+			return json;
+		}
+		
 		const auto & jsonGroup = Serializer::Deserialize(json, (ofCamera &)easyCam, name);
 
 		easyCam.setAutoDistance(false);
 
-		try
-		{
-			ofVec3f target;
-			istringstream iss;
-			iss.str(jsonGroup["target"]);
-			iss >> target;
-			easyCam.setTarget(target);
-			easyCam.setDistance(jsonGroup["distance"]);
-			easyCam.setDrag(jsonGroup["drag"]);
-			jsonGroup["mouseInputEnabled"] ? easyCam.enableMouseInput() : easyCam.disableMouseInput();
-			jsonGroup["mouseMiddleButtonEnabled"] ? easyCam.enableMouseMiddleButton() : easyCam.disableMouseMiddleButton();
-			int translationKey = jsonGroup["translationKey"];
-			easyCam.setTranslationKey(translationKey);
-		}
-		catch (const domain_error & err)
-		{
-			ofLogError("Serializer::Deserialize") << err.what();
-		}
+		ofVec3f target;
+		istringstream iss;
+		iss.str(jsonGroup["target"]);
+		iss >> target;
+		easyCam.setTarget(target);
+		easyCam.setDistance(jsonGroup["distance"]);
+		easyCam.setDrag(jsonGroup["drag"]);
+		jsonGroup["mouseInputEnabled"] ? easyCam.enableMouseInput() : easyCam.disableMouseInput();
+		jsonGroup["mouseMiddleButtonEnabled"] ? easyCam.enableMouseMiddleButton() : easyCam.disableMouseMiddleButton();
+		int translationKey = jsonGroup["translationKey"];
+		easyCam.setTranslationKey(translationKey);
 
 		return jsonGroup;
 	}
@@ -160,29 +159,28 @@ namespace ofxPreset
 	//--------------------------------------------------------------
 	const nlohmann::json & Serializer::Deserialize(const nlohmann::json & json, ofCamera & camera, const string & name)
 	{
+		if (!name.empty() && !json.count(name))
+		{
+			ofLogWarning("Serializer::Deserialize") << "Name " << name << " not found in JSON!";
+			return json;
+		}
+		
 		const auto & jsonGroup = Serializer::Deserialize(json, (ofNode &)camera, name);
 
-		try
+		camera.setFov(jsonGroup["fov"]);
+		camera.setNearClip(jsonGroup["nearClip"]);
+		camera.setFarClip(jsonGroup["farClip"]);
+		ofVec2f lensOffset;
+		istringstream iss;
+		iss.str(jsonGroup["lensOffset"]);
+		iss >> lensOffset;
+		camera.setLensOffset(lensOffset);
+		camera.setForceAspectRatio(jsonGroup["forceAspectRatio"]);
+		if (camera.getForceAspectRatio())
 		{
-			camera.setFov(jsonGroup["fov"]);
-			camera.setNearClip(jsonGroup["nearClip"]);
-			camera.setFarClip(jsonGroup["farClip"]);
-			ofVec2f lensOffset;
-			istringstream iss;
-			iss.str(jsonGroup["lensOffset"]);
-			iss >> lensOffset;
-			camera.setLensOffset(lensOffset);
-			camera.setForceAspectRatio(jsonGroup["forceAspectRatio"]);
-			if (camera.getForceAspectRatio())
-			{
-				camera.setAspectRatio(jsonGroup["aspectRatio"]);
-			}
-			jsonGroup["ortho"] ? camera.enableOrtho() : camera.disableOrtho();
+			camera.setAspectRatio(jsonGroup["aspectRatio"]);
 		}
-		catch (const domain_error & err)
-		{
-			ofLogError("Serializer::Deserialize") << err.what();
-		}
+		jsonGroup["ortho"] ? camera.enableOrtho() : camera.disableOrtho();
 
 		return jsonGroup;
 	}
@@ -202,21 +200,20 @@ namespace ofxPreset
     //--------------------------------------------------------------
     const nlohmann::json & Serializer::Deserialize(const nlohmann::json & json, ofNode & node, const string & name)
     {
-        const auto & jsonGroup = name.empty() ? json : json[name];
-
-		try
+		if (!name.empty() && !json.count(name))
 		{
-			ofMatrix4x4 transform;
-			istringstream iss;
-			iss.str(jsonGroup["transform"]);
-			iss >> transform;
-			node.setTransformMatrix(transform);
-		}
-		catch (const domain_error & err)
-		{
-			ofLogError("Serializer::Deserialize") << err.what();
+			ofLogWarning("Serializer::Deserialize") << "Name " << name << " not found in JSON!";
+			return json;
 		}
 
-        return jsonGroup;
+		const auto & jsonGroup = name.empty() ? json : json[name];
+
+		ofMatrix4x4 transform;
+		istringstream iss;
+		iss.str(jsonGroup["transform"]);
+		iss >> transform;
+		node.setTransformMatrix(transform);
+
+		return jsonGroup;
     }
 }
