@@ -38,25 +38,45 @@ namespace ofxPreset
     //--------------------------------------------------------------
     bool Gui::AddParameter(Parameter<ofVec2f> & parameter)
     {
-        return ImGui::SliderFloat2(parameter.getName().c_str(), parameter.getRef()->getPtr(), parameter.getMin().x, parameter.getMax().x);
+		if (ImGui::SliderFloat2(parameter.getName().c_str(), parameter.getRef()->getPtr(), parameter.getMin().x, parameter.getMax().x))
+		{
+			parameter.update();
+			return true;
+		}
+		return false;
     }
 
     //--------------------------------------------------------------
     bool Gui::AddParameter(Parameter<ofVec3f> & parameter)
     {
-        return ImGui::SliderFloat3(parameter.getName().c_str(), parameter.getRef()->getPtr(), parameter.getMin().x, parameter.getMax().x);
+		if (ImGui::SliderFloat3(parameter.getName().c_str(), parameter.getRef()->getPtr(), parameter.getMin().x, parameter.getMax().x))
+		{
+			parameter.update();
+			return true;
+		}
+		return false;
     }
 
     //--------------------------------------------------------------
     bool Gui::AddParameter(Parameter<ofVec4f> & parameter)
     {
-        return ImGui::SliderFloat4(parameter.getName().c_str(), parameter.getRef()->getPtr(), parameter.getMin().x, parameter.getMax().x);
+		if (ImGui::SliderFloat4(parameter.getName().c_str(), parameter.getRef()->getPtr(), parameter.getMin().x, parameter.getMax().x))
+		{
+			parameter.update();
+			return true;
+		}
+		return false;
     }
 
     //--------------------------------------------------------------
     bool Gui::AddParameter(Parameter<ofFloatColor> & parameter)
     {
-        return ImGui::ColorEdit4(parameter.getName().c_str(), &(parameter.getRef()->r));
+		if (ImGui::ColorEdit4(parameter.getName().c_str(), &(parameter.getRef()->r)))
+		{
+			parameter.update();
+			return true;
+		}
+		return false;
     }
 
 	//--------------------------------------------------------------
@@ -66,15 +86,30 @@ namespace ofxPreset
 		const auto & info = typeid(ParameterType);
 		if (info == typeid(float))
 		{
-			return ImGui::SliderFloat(parameter.getName().c_str(), (float *)parameter.getRef(), parameter.getMin(), parameter.getMax());
+			if (ImGui::SliderFloat(parameter.getName().c_str(), (float *)parameter.getRef(), parameter.getMin(), parameter.getMax()))
+			{
+				parameter.update();
+				return true;
+			}
+			return false;
 		}
 		if (info == typeid(int))
 		{
-			return ImGui::SliderInt(parameter.getName().c_str(), (int *)parameter.getRef(), parameter.getMin(), parameter.getMax());
+			if (ImGui::SliderInt(parameter.getName().c_str(), (int *)parameter.getRef(), parameter.getMin(), parameter.getMax()))
+			{
+				parameter.update();
+				return true;
+			}
+			return false;
 		}
 		if (info == typeid(bool))
 		{
-			return ImGui::Checkbox(parameter.getName().c_str(), (bool *)parameter.getRef());
+			if (ImGui::Checkbox(parameter.getName().c_str(), (bool *)parameter.getRef()))
+			{
+				parameter.update();
+				return true;
+			}
+			return false;
 		}
 		ofLogWarning("Gui::addParameter") << "Could not create GUI element for type " << info.name();
 		return false;
@@ -83,7 +118,13 @@ namespace ofxPreset
 	//--------------------------------------------------------------
 	bool Gui::AddRange(const string & name, Parameter<float> & parameterMin, Parameter<float> & parameterMax, float speed)
 	{
-		return ImGui::DragFloatRange2(name.c_str(), parameterMin.getRef(), parameterMax.getRef(), speed, parameterMin.getMin(), parameterMax.getMax());
+		if (ImGui::DragFloatRange2(name.c_str(), parameterMin.getRef(), parameterMax.getRef(), speed, parameterMin.getMin(), parameterMax.getMax()))
+		{
+			parameterMin.update();
+			parameterMax.update();
+			return true;
+		}
+		return false;
 	}
 
 	//--------------------------------------------------------------
