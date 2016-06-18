@@ -165,15 +165,15 @@ void ofApp::loadCamera()
 		file >> json;
 
 		ofxPreset::Serializer::Deserialize(json, this->camera);
+	}
 
-		if (this->parameters.camera.mouseEnabled)
-		{
-			this->camera.enableMouseInput();
-		}
-		else
-		{
-			this->camera.disableMouseInput();
-		}
+	if (this->parameters.camera.mouseEnabled)
+	{
+		this->camera.enableMouseInput();
+	}
+	else
+	{
+		this->camera.disableMouseInput();
 	}
 }
 
@@ -249,7 +249,6 @@ void ofApp::imGui()
 			{
 				if (ofxPreset::Gui::AddParameter(this->parameters.camera.mouseEnabled))
 				{
-					this->parameters.camera.mouseEnabled.update();
 					this->loadCamera();
 				}
 				if (ImGui::Button("Save..."))

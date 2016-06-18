@@ -69,7 +69,7 @@ public:
 		
 		struct : ofParameterGroup
 		{
-			ofxPreset::Parameter<bool> mouseEnabled{ "Mouse Enabled", true, true };
+			ofxPreset::Parameter<bool> mouseEnabled{ "Mouse Enabled", true, false };
 			ofParameter<string> filePath{ "File Path", "camera.json" };
 
 			PARAM_DECLARE("Camera", mouseEnabled, filePath);
@@ -77,7 +77,7 @@ public:
 
 		struct : ofParameterGroup
 		{
-			ofxPreset::Parameter<bool> enabled{ "Enabled", true, true };
+			ofxPreset::Parameter<bool> enabled{ "Enabled", true, false };
 			ofxPreset::Parameter<float> sizeMin{ "Size Min", 10.0f, 0.0f, 1000.0f };
 			ofxPreset::Parameter<float> sizeMax{ "Size Max", 200.0f, 0.0f, 1000.0f };
 			ofxPreset::Parameter<float> speed{ "Speed", 0.1f, 0.0f, 1.0f };
@@ -87,9 +87,9 @@ public:
 
 		struct : ofParameterGroup
 		{
-			ofxPreset::Parameter<int> fillMode{ "Fill Mode", RenderModeTexture };
-			ofxPreset::Parameter<int> strokeMode{ "Stroke Mode", RenderModeNone };
-			ofxPreset::Parameter<bool> preview{ "Preview", false, true };
+			ofxPreset::Parameter<int> fillMode{ "Fill Mode", RenderModeTexture, true };   // Should auto-update as we're using radio buttons in the gui.
+			ofxPreset::Parameter<int> strokeMode{ "Stroke Mode", RenderModeNone, true };  // Should auto-update as we're using radio buttons in the gui.
+			ofxPreset::Parameter<bool> preview{ "Preview", false, false };
 			ofParameter<string> imagePath{ "Image Path", "texture.jpg" };
 
 			PARAM_DECLARE("Render", fillMode, strokeMode, preview, imagePath);
