@@ -34,6 +34,9 @@ namespace ofxPreset
 		void onValueChanged(ParameterType & v);
 
 	private:
+		// Called from the constructors.
+		void setup(bool autoUpdating);
+
 		ParameterType mutableValue;
 
 		bool autoUpdating;

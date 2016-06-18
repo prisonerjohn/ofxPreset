@@ -7,8 +7,7 @@ namespace ofxPreset
 	Parameter<ParameterType>::Parameter(bool autoUpdating)
 		: ofParameter()
 	{
-		this->autoUpdating = false;
-		this->setAutoUpdating(autoUpdating);
+		this->setup(autoUpdating);
 	}
 	
 	//--------------------------------------------------------------
@@ -16,10 +15,7 @@ namespace ofxPreset
 	Parameter<ParameterType>::Parameter(const ofParameter<ParameterType> & v, bool autoUpdating)
 		: ofParameter(v)
 	{
-		this->autoUpdating = false;
-		this->setAutoUpdating(autoUpdating);
-
-		this->mutableValue = ofParameter::get();
+		this->setup(autoUpdating);
 	}
 	
 	//--------------------------------------------------------------
@@ -27,10 +23,7 @@ namespace ofxPreset
 	Parameter<ParameterType>::Parameter(const ParameterType & v, bool autoUpdating)
 		: ofParameter(v)
 	{
-		this->autoUpdating = false;
-		this->setAutoUpdating(autoUpdating);
-
-		this->mutableValue = ofParameter::get();
+		this->setup(autoUpdating);
 	}
 	
 	//--------------------------------------------------------------
@@ -38,10 +31,7 @@ namespace ofxPreset
 	Parameter<ParameterType>::Parameter(const string& name, const ParameterType & v, bool autoUpdating)
 		: ofParameter(name, v)
 	{
-		this->autoUpdating = false;
-		this->setAutoUpdating(autoUpdating);
-
-		this->mutableValue = ofParameter::get();
+		this->setup(autoUpdating);
 	}
 	
 	//--------------------------------------------------------------
@@ -49,10 +39,7 @@ namespace ofxPreset
 	Parameter<ParameterType>::Parameter(const string& name, const ParameterType & v, const ParameterType & min, const ParameterType & max, bool autoUpdating)
 		: ofParameter(name, v, min, max)
 	{
-		this->autoUpdating = false;
-		this->setAutoUpdating(autoUpdating);
-
-		this->mutableValue = ofParameter::get();
+		this->setup(autoUpdating);
 	}
 
 	//--------------------------------------------------------------
@@ -60,6 +47,20 @@ namespace ofxPreset
 	Parameter<ParameterType>::~Parameter()
 	{
 		this->setAutoUpdating(false);
+
+		this->removeListener(this, &Parameter::onValueChanged);
+	}
+
+	//--------------------------------------------------------------
+	template<typename ParameterType>
+	void Parameter<ParameterType>::setup(bool autoUpdating)
+	{
+		this->autoUpdating = false;
+		this->setAutoUpdating(autoUpdating);
+
+		this->mutableValue = ofParameter::get();
+
+		this->addListener(this, &Parameter::onValueChanged);
 	}
 
 	//--------------------------------------------------------------
@@ -81,12 +82,10 @@ namespace ofxPreset
 		if (autoUpdating)
 		{
 			ofAddListener(ofEvents().update, this, &Parameter::onUpdate);
-			this->addListener(this, &Parameter::onValueChanged);
 		}
 		else
 		{
 			ofRemoveListener(ofEvents().update, this, &Parameter::onUpdate);
-			this->removeListener(this, &Parameter::onValueChanged);
 		}
 
 		this->autoUpdating = autoUpdating;
