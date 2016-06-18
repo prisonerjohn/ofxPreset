@@ -14,11 +14,11 @@ namespace ofxPreset
 		: public ofParameter<ParameterType>
 	{
 	public:
-		Parameter(bool autoUpdating = true);
-		Parameter(const ofParameter<ParameterType> & v, bool autoUpdating = true);
-		Parameter(const ParameterType & v, bool autoUpdating = true);
-		Parameter(const string& name, const ParameterType & v, bool autoUpdating = true);
-		Parameter(const string& name, const ParameterType & v, const ParameterType & min, const ParameterType & max, bool autoUpdating = true);
+		Parameter(bool autoUpdating = false);
+		Parameter(const ofParameter<ParameterType> & v, bool autoUpdating = false);
+		Parameter(const ParameterType & v, bool autoUpdating = false);
+		Parameter(const string& name, const ParameterType & v, bool autoUpdating = false);
+		Parameter(const string& name, const ParameterType & v, const ParameterType & min, const ParameterType & max, bool autoUpdating = false);
 
 		virtual ~Parameter();
 
