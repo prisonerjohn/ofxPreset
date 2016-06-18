@@ -118,10 +118,10 @@ namespace ofxPreset
 			ofLogWarning("Serializer::Deserialize") << "Name " << name << " not found in JSON!";
 			return json;
 		}
-		
-		const auto & jsonGroup = Serializer::Deserialize(json, (ofCamera &)easyCam, name);
 
 		easyCam.setAutoDistance(false);
+
+		const auto & jsonGroup = name.empty() ? json : json[name];
 
 		ofVec3f target;
 		istringstream iss;
@@ -134,6 +134,8 @@ namespace ofxPreset
 		jsonGroup["mouseMiddleButtonEnabled"] ? easyCam.enableMouseMiddleButton() : easyCam.disableMouseMiddleButton();
 		int translationKey = jsonGroup["translationKey"];
 		easyCam.setTranslationKey(translationKey);
+
+		Serializer::Deserialize(jsonGroup, (ofCamera &)easyCam);
 
 		return jsonGroup;
 	}
@@ -165,7 +167,7 @@ namespace ofxPreset
 			return json;
 		}
 		
-		const auto & jsonGroup = Serializer::Deserialize(json, (ofNode &)camera, name);
+		const auto & jsonGroup = name.empty() ? json : json[name];
 
 		camera.setFov(jsonGroup["fov"]);
 		camera.setNearClip(jsonGroup["nearClip"]);
@@ -181,6 +183,8 @@ namespace ofxPreset
 			camera.setAspectRatio(jsonGroup["aspectRatio"]);
 		}
 		jsonGroup["ortho"] ? camera.enableOrtho() : camera.disableOrtho();
+
+		Serializer::Deserialize(jsonGroup, (ofNode &)camera);
 
 		return jsonGroup;
 	}
