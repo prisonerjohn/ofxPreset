@@ -111,7 +111,7 @@ namespace ofxPreset
 			}
 			return false;
 		}
-		ofLogWarning("Gui::addParameter") << "Could not create GUI element for type " << info.name();
+		ofLogWarning("Gui::AddParameter") << "Could not create GUI element for type " << info.name();
 		return false;
 	}
 
