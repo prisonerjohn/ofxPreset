@@ -21,7 +21,7 @@ namespace ofxPreset
 		ImGui::SetNextWindowPos(settings.windowPos, ImGuiSetCond_Appearing);
 		ImGui::SetNextWindowSize(settings.windowSize, ImGuiSetCond_Appearing);
 		ImGui::SetNextWindowCollapsed(collapse, ImGuiSetCond_Appearing);
-		return ImGui::Begin(name.c_str(), opened, ImGuiWindowFlags_AlwaysAutoResize | (collapse ?  0 : ImGuiWindowFlags_NoCollapse));
+		return ImGui::Begin(name.c_str(), opened, ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_AlwaysAutoResize | (collapse ?  0 : ImGuiWindowFlags_NoCollapse));
 	}
 
 	//--------------------------------------------------------------

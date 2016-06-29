@@ -98,14 +98,18 @@ namespace ofxPreset
 	{
 		auto & jsonGroup = Serializer::Serialize(json, (ofCamera &)easyCam, name);
 
+		// Need to remove const qualifier because some getters are not const.
+		// Can be removed if/when this PR goes through: https://github.com/openframeworks/openFrameworks/pull/5126
+		auto & mutableCam = const_cast<ofEasyCam &>(easyCam);
+
 		ostringstream oss;
-		oss << easyCam.getTarget().getPosition();
+		oss << mutableCam.getTarget().getPosition();
 		jsonGroup["target"] = oss.str();
 		jsonGroup["distance"] = easyCam.getDistance();
 		jsonGroup["drag"] = easyCam.getDrag();
-		jsonGroup["mouseInputEnabled"] = easyCam.getMouseInputEnabled();
-		jsonGroup["mouseMiddleButtonEnabled"] = easyCam.getMouseMiddleButtonEnabled();
-		jsonGroup["translationKey"] = easyCam.getTranslationKey();
+		jsonGroup["mouseInputEnabled"] = mutableCam.getMouseInputEnabled();
+		jsonGroup["mouseMiddleButtonEnabled"] = mutableCam.getMouseMiddleButtonEnabled();
+		jsonGroup["translationKey"] = mutableCam.getTranslationKey();
 
 		return jsonGroup;
 	}
