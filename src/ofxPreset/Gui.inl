@@ -35,6 +35,76 @@ namespace ofxPreset
 		settings.mouseOverGui |= bounds.inside(ofGetMouseX(), ofGetMouseY());
 	}
 
+	//--------------------------------------------------------------
+	void Gui::AddGroup(ofParameterGroup & group, GuiSettings & settings, bool window)
+	{
+		if (window)
+		{
+			Gui::BeginWindow(group.getName().c_str(), settings);
+		}
+		for (auto parameter : group)
+		{
+			// Group.
+			auto parameterGroup = dynamic_pointer_cast<ofParameterGroup>(parameter);
+			if (parameterGroup)
+			{
+				// Recurse through contents.
+				Gui::AddGroup(*parameterGroup, settings, false);
+				continue;
+			}
+
+			// Parameter, try everything we know how to handle.
+			auto parameterVec2f = dynamic_pointer_cast<Parameter<ofVec2f>>(parameter);
+			if (parameterVec2f)
+			{
+				Gui::AddParameter(*parameterVec2f);
+				continue;
+			}
+			auto parameterVec3f = dynamic_pointer_cast<Parameter<ofVec3f>>(parameter);
+			if (parameterVec3f)
+			{
+				Gui::AddParameter(*parameterVec3f);
+				continue;
+			}
+			auto parameterVec4f = dynamic_pointer_cast<Parameter<ofVec4f>>(parameter);
+			if (parameterVec4f)
+			{
+				Gui::AddParameter(*parameterVec4f);
+				continue;
+			}
+			auto parameterFloatColor = dynamic_pointer_cast<Parameter<ofFloatColor>>(parameter);
+			if (parameterFloatColor)
+			{
+				Gui::AddParameter(*parameterFloatColor);
+				continue;
+			}
+			auto parameterFloat = dynamic_pointer_cast<Parameter<float>>(parameter);
+			if (parameterFloat)
+			{
+				Gui::AddParameter(*parameterFloat);
+				continue;
+			}
+			auto parameterInt = dynamic_pointer_cast<Parameter<int>>(parameter);
+			if (parameterInt)
+			{
+				Gui::AddParameter(*parameterInt);
+				continue;
+			}
+			auto parameterBool = dynamic_pointer_cast<Parameter<bool>>(parameter);
+			if (parameterBool)
+			{
+				Gui::AddParameter(*parameterBool);
+				continue;
+			}
+
+			ofLogWarning("Gui::AddGroup") << "Could not create GUI element for parameter " << parameter->getName();
+		}
+		if (window)
+		{
+			Gui::EndWindow(settings);
+		}
+	}
+
     //--------------------------------------------------------------
     bool Gui::AddParameter(Parameter<ofVec2f> & parameter)
     {

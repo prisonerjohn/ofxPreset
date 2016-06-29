@@ -217,7 +217,9 @@ void ofApp::imGui()
 	{
 		auto mainSettings = ofxPreset::GuiSettings();
 
-		if (ofxPreset::Gui::BeginWindow(this->parameters.getName(), mainSettings))
+		ofxPreset::Gui::AddGroup(this->parameters, mainSettings);
+
+		/*if (ofxPreset::Gui::BeginWindow(this->parameters.getName(), mainSettings))
 		{
 			ImGui::Text("%.1f FPS (%.3f ms/frame)", ofGetFrameRate(), 1000.0f / ImGui::GetIO().Framerate);
 
@@ -321,7 +323,7 @@ void ofApp::imGui()
 				}
 			}
 		}
-		ofxPreset::Gui::EndWindow(mainSettings);
+		ofxPreset::Gui::EndWindow(mainSettings);*/
 
 		if (this->parameters.render.preview)
 		{

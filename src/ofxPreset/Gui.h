@@ -31,6 +31,8 @@ namespace ofxPreset
 		static inline bool BeginWindow(const string & name, const GuiSettings & settings, bool collapse = true, bool * opened = nullptr);
 	
 		static inline void EndWindow(GuiSettings & settings);
+
+		static inline void AddGroup(ofParameterGroup & group, GuiSettings & settings, bool window = true);
 	
         static inline bool AddParameter(Parameter<ofVec2f> & parameter);
         static inline bool AddParameter(Parameter<ofVec3f> & parameter);
