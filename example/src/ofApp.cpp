@@ -293,7 +293,7 @@ void ofApp::imGui()
 					}
 				}
 
-				ImGui::SetNextTreeNodeOpened(true, ImGuiSetCond_Appearing);
+				ImGui::SetNextTreeNodeOpen(true, ImGuiSetCond_Appearing);
 				if (ImGui::TreeNode("Fill"))
 				{
 					ImGui::Columns(3);
@@ -305,7 +305,7 @@ void ofApp::imGui()
 					ImGui::TreePop();
 				}
 
-				ImGui::SetNextTreeNodeOpened(true, ImGuiSetCond_Appearing);
+				ImGui::SetNextTreeNodeOpen(true, ImGuiSetCond_Appearing);
 				if (ImGui::TreeNode("Stroke"))
 				{
 					ImGui::Columns(3);
