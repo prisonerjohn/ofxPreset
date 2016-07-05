@@ -140,6 +140,72 @@ namespace ofxPreset
 		}
 	}
 
+	//--------------------------------------------------------------
+	bool Gui::AddParameter(Parameter<glm::tvec2<int>> & parameter)
+	{
+		if (ImGui::SliderInt2(parameter.getName().c_str(), glm::value_ptr(*parameter.getRef()), parameter.getMin().x, parameter.getMax().x))
+		{
+			parameter.update();
+			return true;
+		}
+		return false;
+	}
+
+	//--------------------------------------------------------------
+	bool Gui::AddParameter(Parameter<glm::tvec3<int>> & parameter)
+	{
+		if (ImGui::SliderInt3(parameter.getName().c_str(), glm::value_ptr(*parameter.getRef()), parameter.getMin().x, parameter.getMax().x))
+		{
+			parameter.update();
+			return true;
+		}
+		return false;
+	}
+
+	//--------------------------------------------------------------
+	bool Gui::AddParameter(Parameter<glm::tvec4<int>> & parameter)
+	{
+		if (ImGui::SliderInt4(parameter.getName().c_str(), glm::value_ptr(*parameter.getRef()), parameter.getMin().x, parameter.getMax().x))
+		{
+			parameter.update();
+			return true;
+		}
+		return false;
+	}
+
+    //--------------------------------------------------------------
+    bool Gui::AddParameter(Parameter<glm::vec2> & parameter)
+    {
+        if (ImGui::SliderFloat2(parameter.getName().c_str(), glm::value_ptr(*parameter.getRef()), parameter.getMin().x, parameter.getMax().x))
+        {
+            parameter.update();
+            return true;
+        }
+        return false;
+    }
+
+    //--------------------------------------------------------------
+    bool Gui::AddParameter(Parameter<glm::vec3> & parameter)
+    {
+        if (ImGui::SliderFloat3(parameter.getName().c_str(), glm::value_ptr(*parameter.getRef()), parameter.getMin().x, parameter.getMax().x))
+        {
+            parameter.update();
+            return true;
+        }
+        return false;
+    }
+
+    //--------------------------------------------------------------
+    bool Gui::AddParameter(Parameter<glm::vec4> & parameter)
+    {
+        if (ImGui::SliderFloat4(parameter.getName().c_str(), glm::value_ptr(*parameter.getRef()), parameter.getMin().x, parameter.getMax().x))
+        {
+            parameter.update();
+            return true;
+        }
+        return false;
+    }
+
     //--------------------------------------------------------------
     bool Gui::AddParameter(Parameter<ofVec2f> & parameter)
     {

@@ -31,11 +31,21 @@ namespace ofxPreset
 
 		static inline void AddGroup(ofParameterGroup & group, Settings & settings);
 	
+        static inline bool AddParameter(Parameter<glm::tvec2<int>> & parameter);
+        static inline bool AddParameter(Parameter<glm::tvec3<int>> & parameter);
+        static inline bool AddParameter(Parameter<glm::tvec4<int>> & parameter);
+
+        static inline bool AddParameter(Parameter<glm::vec2> & parameter);
+        static inline bool AddParameter(Parameter<glm::vec3> & parameter);
+        static inline bool AddParameter(Parameter<glm::vec4> & parameter);
+        
         static inline bool AddParameter(Parameter<ofVec2f> & parameter);
         static inline bool AddParameter(Parameter<ofVec3f> & parameter);
         static inline bool AddParameter(Parameter<ofVec4f> & parameter);
+        
         static inline bool AddParameter(Parameter<ofFloatColor> & parameter);
-		template<typename ParameterType>
+		
+        template<typename ParameterType>
 		static inline bool AddParameter(Parameter<ParameterType> & parameter);
 
 		static inline bool AddRange(const string & name, Parameter<float> & parameterMin, Parameter<float> & parameterMax, float speed = 0.01f);
