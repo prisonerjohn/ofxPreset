@@ -9,7 +9,7 @@ namespace ofxPreset
         : autoUpdating(false)
     {
         this->setAutoUpdating(autoUpdate);
-        this->addListener(this, &Parameter::Data::onValueChanged);
+        this->parameter.addListener(this, &Parameter::Data::onValueChanged);
     }
 
     //--------------------------------------------------------------
