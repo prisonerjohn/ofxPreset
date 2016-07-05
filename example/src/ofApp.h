@@ -40,7 +40,7 @@ public:
 	ofTexture texture;
 
 	// GUI
-	void imGui();
+	bool imGui();
 
 	ofxImGui gui;
 	bool guiVisible;
@@ -87,9 +87,9 @@ public:
 
 		struct : ofParameterGroup
 		{
-			ofxPreset::Parameter<int> fillMode{ "Fill Mode", RenderModeTexture, true };   // Should auto-update as we're using radio buttons in the gui.
-			ofxPreset::Parameter<int> strokeMode{ "Stroke Mode", RenderModeNone, true };  // Should auto-update as we're using radio buttons in the gui.
-			ofxPreset::Parameter<bool> preview{ "Preview", false, false };
+			ofxPreset::Parameter<int> fillMode{ "Fill Mode", RenderModeTexture, true };   // Auto-update because we're using radio buttons in the gui.
+			ofxPreset::Parameter<int> strokeMode{ "Stroke Mode", RenderModeNone, true };  // Auto-update because we're using radio buttons in the gui.
+			ofxPreset::Parameter<bool> preview{ "Preview", false, true };                 // Auto-update because we can close the window from its toolbar.
 			ofParameter<string> imagePath{ "Image Path", "texture.jpg" };
 
 			PARAM_DECLARE("Render", fillMode, strokeMode, preview, imagePath);

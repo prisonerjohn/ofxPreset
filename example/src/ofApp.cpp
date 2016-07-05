@@ -88,7 +88,7 @@ void ofApp::draw()
 	this->mouseOverGui = false;
 	if (this->guiVisible)
 	{
-		imGui();
+        this->mouseOverGui = imGui();
 	}
 	if (this->mouseOverGui)
 	{
@@ -211,15 +211,13 @@ bool ofApp::loadImage(const string & filePath)
 }
 
 //--------------------------------------------------------------
-void ofApp::imGui()
+bool ofApp::imGui()
 {
-	this->gui.begin();
+    auto mainSettings = ofxPreset::Gui::Settings();
+
+    this->gui.begin();
 	{
-		auto mainSettings = ofxPreset::GuiSettings();
-
-		ofxPreset::Gui::AddGroup(this->parameters, mainSettings);
-
-		/*if (ofxPreset::Gui::BeginWindow(this->parameters.getName(), mainSettings))
+		if (ofxPreset::Gui::BeginWindow(this->parameters.getName(), mainSettings))
 		{
 			ImGui::Text("%.1f FPS (%.3f ms/frame)", ofGetFrameRate(), 1000.0f / ImGui::GetIO().Framerate);
 
@@ -241,11 +239,7 @@ void ofApp::imGui()
 				}
 			}
 
-			if (ImGui::CollapsingHeader(this->parameters.colors.getName().c_str(), nullptr, true, true))
-			{
-				ofxPreset::Gui::AddParameter(this->parameters.colors.background);
-				ofxPreset::Gui::AddParameter(this->parameters.colors.foreground);
-			}
+            ofxPreset::Gui::AddGroup(this->parameters.colors, mainSettings);
 
 			if (ImGui::CollapsingHeader(this->parameters.camera.getName().c_str(), nullptr, true, true))
 			{
@@ -323,12 +317,12 @@ void ofApp::imGui()
 				}
 			}
 		}
-		ofxPreset::Gui::EndWindow(mainSettings);*/
+		ofxPreset::Gui::EndWindow(mainSettings);
 
 		if (this->parameters.render.preview)
 		{
 			static const float kPreviewSize = 256.0f;
-			auto previewSettings = ofxPreset::GuiSettings();
+			auto previewSettings = ofxPreset::Gui::Settings();
 			previewSettings.windowPos = ofVec2f(ofGetWidth() - kPreviewSize - kGuiMargin * 3, kGuiMargin);
 			previewSettings.windowSize = ofVec2f(kPreviewSize, kPreviewSize);
 
@@ -340,6 +334,8 @@ void ofApp::imGui()
 		}
 	}
 	this->gui.end();
+
+    return mainSettings.mouseOverGui;
 }
 
 //--------------------------------------------------------------
