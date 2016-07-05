@@ -36,9 +36,9 @@ void ofApp::update()
 //--------------------------------------------------------------
 void ofApp::draw()
 {
-	ofBackground(this->parameters.colors.background.get());
-	
-	this->camera.begin();
+    ofBackground(this->parameters.colors.background.get());
+
+    this->camera.begin();
 	{	
 		ofEnableDepthTest();
 
@@ -88,7 +88,7 @@ void ofApp::draw()
 	this->mouseOverGui = false;
 	if (this->guiVisible)
 	{
-        this->mouseOverGui = imGui();
+        this->mouseOverGui = this->imGui();
 	}
 	if (this->mouseOverGui)
 	{
