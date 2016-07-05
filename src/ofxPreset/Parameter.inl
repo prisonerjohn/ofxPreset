@@ -37,7 +37,6 @@ namespace ofxPreset
     {
         if (this->parameter.get() != this->mutableValue)
         {
-            cout << ofGetFrameNum() << " Toggle " << this->mutableValue << " to " << this->parameter.get() << endl;
             this->parameter.setWithoutEventNotifications(this->mutableValue);
         }
     }
@@ -157,7 +156,7 @@ namespace ofxPreset
 	template<typename ParameterType>
 	Parameter<ParameterType>::operator const ParameterType & () const
     {
-		return (ParameterType &)this->data->parameter;
+		return (ParameterType &)this->data->parameter.get();
 	}
 
 	//--------------------------------------------------------------
