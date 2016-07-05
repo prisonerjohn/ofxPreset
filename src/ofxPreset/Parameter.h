@@ -13,50 +13,62 @@ namespace ofxPreset
 	class Parameter
 	    : public ofAbstractParameter
 	{
+    protected:
+        struct Data
+        {
+        public:
+            Data(bool autoUpdating);
+            Data(const ofParameter<ParameterType> & parameter, bool autoUpdating);
+            ~Data();
+
+            void update();
+            void setAutoUpdating(bool autoUpdating);
+
+        public: 
+            ParameterType mutableValue;
+            ofParameter<ParameterType> parameter;
+            bool autoUpdating;
+
+        protected:
+            void onUpdate(ofEventArgs & args);
+            void onValueChanged(ParameterType & v);
+        };
+
+        shared_ptr<Data> data;
+
 	public:
 		Parameter(bool autoUpdating = false);
 		Parameter(const ofParameter<ParameterType> & v, bool autoUpdating = false);
 		Parameter(const ParameterType & v, bool autoUpdating = false);
-		Parameter(const string& name, const ParameterType & v, bool autoUpdating = false);
-		Parameter(const string& name, const ParameterType & v, const ParameterType & min, const ParameterType & max, bool autoUpdating = false);
-
-		virtual ~Parameter();
+		Parameter(const string & name, const ParameterType & v, bool autoUpdating = false);
+		Parameter(const string & name, const ParameterType & v, const ParameterType & min, const ParameterType & max, bool autoUpdating = false);
+        Parameter(shared_ptr<Data> data);
 
 		void update();
 
 		void setAutoUpdating(bool autoUpdating);
 		bool isAutoUpdating() const;
 
-		ParameterType * getRef();
-		const ParameterType & get() const;
-		const ParameterType * operator->() const;
-		operator const ParameterType & () const;
+		virtual void setName(const string & name) override;
+		virtual string getName() const override;
 
-		void setName(const string & name);
-		string getName() const;
+        virtual string toString() const override;
+        virtual void fromString(const string & name) override;
+        
+        ParameterType * getRef();
+        const ParameterType & get() const;
+        const ParameterType * operator->() const;
+        operator const ParameterType & () const;
 
-		ParameterType getMin() const;
-
+        ParameterType getMin() const;
 		ParameterType getMax() const;
-
-
-		std::string toString() const;
-		void fromString(const std::string & name);
-
+		
 		template<class ListenerClass, typename ListenerMethod>
-		void addListener(ListenerClass * listener, ListenerMethod method, int prio=OF_EVENT_ORDER_AFTER_APP){
-			parameter.addListener(listener, method, prio);
-		}
-
+        void addListener(ListenerClass * listener, ListenerMethod method, int prio = OF_EVENT_ORDER_AFTER_APP);
 		template<class ListenerClass, typename ListenerMethod>
-		void removeListener(ListenerClass * listener, ListenerMethod method, int prio=OF_EVENT_ORDER_AFTER_APP){
-			parameter.addListener(listener, method, prio);
-		}
-
+        void removeListener(ListenerClass * listener, ListenerMethod method, int prio = OF_EVENT_ORDER_AFTER_APP);
 		template<typename... Args>
-		ofEventListener newListener(Args...args) {
-			return parameter.newListener(args...);
-		}
+        ofEventListener newListener(Args...args);
 
 		void enableEvents();
 		void disableEvents();
@@ -95,10 +107,9 @@ namespace ofxPreset
 		template<typename OtherType>
 		Parameter<ParameterType> & operator>>=(const OtherType & v);
 
-
 		Parameter<ParameterType> & set(const ParameterType & v);
-		Parameter<ParameterType> & set(const string& name, const ParameterType & v);
-		Parameter<ParameterType> & set(const string& name, const ParameterType & v, const ParameterType & min, const ParameterType & max);
+		Parameter<ParameterType> & set(const string & name, const ParameterType & v);
+		Parameter<ParameterType> & set(const string & name, const ParameterType & v, const ParameterType & min, const ParameterType & max);
 
 		Parameter<ParameterType> & setWithoutEventNotifications(const ParameterType & v);
 
@@ -109,27 +120,10 @@ namespace ofxPreset
 		shared_ptr<ofAbstractParameter> newReference() const;
 
 		void setParent(ofParameterGroup & _parent);
-
-		const ofParameterGroup getFirstParent() const{
-			return parameter.getFirstParent();
-		}
+        const ofParameterGroup getFirstParent() const;
 
 		size_t getNumListeners() const;
 		const void* getInternalObject() const;
-
-	protected:
-		void onUpdate(ofEventArgs & args);
-		void onValueChanged(ParameterType & v);
-
-	private:
-		// Called from the constructors.
-		void setup(bool autoUpdating);
-		Parameter(ofParameter<ParameterType> && parameter, bool autoUpdating);
-
-		ParameterType mutableValue;
-		ofParameter<ParameterType> parameter;
-
-		bool autoUpdating;
 	};
 }
 

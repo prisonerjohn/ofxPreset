@@ -2,281 +2,326 @@
 
 namespace ofxPreset
 {
-	//--------------------------------------------------------------
+#pragma mark Parameter::Data
+    //--------------------------------------------------------------
+    template<typename ParameterType>
+    Parameter<ParameterType>::Data::Data(bool autoUpdate)
+        : autoUpdating(false)
+    {
+        this->setAutoUpdating(autoUpdate);
+        this->addListener(this, &Parameter::Data::onValueChanged);
+    }
+
+    //--------------------------------------------------------------
+    template<typename ParameterType>
+    Parameter<ParameterType>::Data::Data(const ofParameter<ParameterType> & v, bool autoUpdate)
+        : parameter(v)
+        , mutableValue(v)
+        , autoUpdating(false)
+    {
+        this->setAutoUpdating(autoUpdate);
+        this->parameter.addListener(this, &Parameter::Data::onValueChanged);
+    }
+
+    //--------------------------------------------------------------
+    template<typename ParameterType>
+    Parameter<ParameterType>::Data::~Data()
+    {
+        this->setAutoUpdating(false);
+        this->parameter.removeListener(this, &Parameter::Data::onValueChanged);
+    }
+
+    //--------------------------------------------------------------
+    template<typename ParameterType>
+    void Parameter<ParameterType>::Data::update()
+    {
+        if (this->parameter.get() != this->mutableValue)
+        {
+            cout << ofGetFrameNum() << " Toggle " << this->mutableValue << " to " << this->parameter.get() << endl;
+            this->parameter.setWithoutEventNotifications(this->mutableValue);
+        }
+    }
+
+    //--------------------------------------------------------------
+    template<typename ParameterType>
+    void Parameter<ParameterType>::Data::setAutoUpdating(bool autoUpdating)
+    {
+        if (this->autoUpdating == autoUpdating) return;
+
+        if (autoUpdating)
+        {
+            ofAddListener(ofEvents().update, this, &Parameter::Data::onUpdate);
+        }
+        else
+        {
+            ofRemoveListener(ofEvents().update, this, &Parameter::Data::onUpdate);
+        }
+
+        this->autoUpdating = autoUpdating;
+    }
+
+    //--------------------------------------------------------------
+    template<typename ParameterType>
+    void Parameter<ParameterType>::Data::onUpdate(ofEventArgs & args)
+    {
+        this->update();
+    }
+
+    //--------------------------------------------------------------
+    template<typename ParameterType>
+    void Parameter<ParameterType>::Data::onValueChanged(ParameterType & v)
+    {
+        this->mutableValue = this->parameter.get();
+    }
+    
+#pragma mark Parameter
+    //--------------------------------------------------------------
 	template<typename ParameterType>
-	Parameter<ParameterType>::Parameter(bool autoUpdating)
-	{
-		this->setup(autoUpdating);
-	}
+    Parameter<ParameterType>::Parameter(bool autoUpdating)
+        : data(make_shared<Data>(autoUpdating))
+    {}
 	
 	//--------------------------------------------------------------
 	template<typename ParameterType>
 	Parameter<ParameterType>::Parameter(const ofParameter<ParameterType> & v, bool autoUpdating)
-	:parameter(v)
-	,mutableValue(v)
-	{
-		this->setup(autoUpdating);
-	}
+        : data(make_shared<Data>(ofParameter<ParameterType>(v), autoUpdating))
+    {}
 	
 	//--------------------------------------------------------------
 	template<typename ParameterType>
 	Parameter<ParameterType>::Parameter(const ParameterType & v, bool autoUpdating)
-	:parameter(v)
-	,mutableValue(v)
-	{
-		this->setup(autoUpdating);
-	}
+        : data(make_shared<Data>(ofParameter<ParameterType>(v), autoUpdating))
+    {}
 	
 	//--------------------------------------------------------------
 	template<typename ParameterType>
-	Parameter<ParameterType>::Parameter(const string& name, const ParameterType & v, bool autoUpdating)
-	:parameter(name, v)
-	,mutableValue(v)
-	{
-		this->setup(autoUpdating);
-	}
-	
-	//--------------------------------------------------------------
-	template<typename ParameterType>
-	Parameter<ParameterType>::Parameter(const string& name, const ParameterType & v, const ParameterType & min, const ParameterType & max, bool autoUpdating)
-	:parameter(name, v, min, max)
-	,mutableValue(v)
-	{
-		this->setup(autoUpdating);
-	}
+	Parameter<ParameterType>::Parameter(const string & name, const ParameterType & v, bool autoUpdating)
+        : data(make_shared<Data>(ofParameter<ParameterType>(name, v), autoUpdating))
+    {}
 
 	//--------------------------------------------------------------
 	template<typename ParameterType>
-	Parameter<ParameterType>::Parameter(ofParameter<ParameterType> && parameter, bool autoUpdating)
-	:parameter(parameter)
-	,mutableValue(parameter.get())
-	{
-		this->setup(autoUpdating);
-	}
+	Parameter<ParameterType>::Parameter(const string & name, const ParameterType & v, const ParameterType & min, const ParameterType & max, bool autoUpdating)
+        : data(make_shared<Data>(ofParameter<ParameterType>(name, v, min, max), autoUpdating))
+    {}
 
 	//--------------------------------------------------------------
 	template<typename ParameterType>
-	Parameter<ParameterType>::~Parameter()
-	{
-		this->setAutoUpdating(false);
-
-		this->removeListener(this, &Parameter::onValueChanged);
-	}
-
-	//--------------------------------------------------------------
-	template<typename ParameterType>
-	void Parameter<ParameterType>::setup(bool autoUpdating)
-	{
-		this->autoUpdating = false;
-		this->setAutoUpdating(autoUpdating);
-		this->addListener(this, &Parameter::onValueChanged);
-	}
+	Parameter<ParameterType>::Parameter(shared_ptr<Data> data)
+        : data(data)
+    {}
 
 	//--------------------------------------------------------------
 	template<typename ParameterType>
 	void Parameter<ParameterType>::update()
 	{
-		if (get() != this->mutableValue)
-		{
-			setWithoutEventNotifications(mutableValue);
-		}
+        this->data->update();
 	}
 
 	//--------------------------------------------------------------
 	template<typename ParameterType>
 	void Parameter<ParameterType>::setAutoUpdating(bool autoUpdating)
 	{
-		if (this->autoUpdating == autoUpdating) return;
-
-		if (autoUpdating)
-		{
-			ofAddListener(ofEvents().update, this, &Parameter::onUpdate);
-		}
-		else
-		{
-			ofRemoveListener(ofEvents().update, this, &Parameter::onUpdate);
-		}
-
-		this->autoUpdating = autoUpdating;
+        this->data->setAutoUpdating(autoUpdating);
 	}
 	
 	//--------------------------------------------------------------
 	template<typename ParameterType>
 	bool Parameter<ParameterType>::isAutoUpdating() const
 	{
-		return this->autoUpdating;
-	}
-
-	//--------------------------------------------------------------
-	template<typename ParameterType>
-	void Parameter<ParameterType>::onUpdate(ofEventArgs & args)
-	{
-		this->update();
-	}
-
-	//--------------------------------------------------------------
-	template<typename ParameterType>
-	void Parameter<ParameterType>::onValueChanged(ParameterType & v)
-	{
-		this->mutableValue = get();
+		return this->data->autoUpdating;
 	}
 
 	//--------------------------------------------------------------
 	template<typename ParameterType>
 	ParameterType * Parameter<ParameterType>::getRef()
 	{
-		return &this->mutableValue;
+		return &this->data->mutableValue;
 	}
 
 	//--------------------------------------------------------------
 	template<typename ParameterType>
-	const ParameterType & Parameter<ParameterType>::get() const{
-		return this->parameter.get();
-	}
-
-
-	//--------------------------------------------------------------
-	template<typename ParameterType>
-	const ParameterType * Parameter<ParameterType>::operator->() const{
-		return this->parameter.operator->();
+	const ParameterType & Parameter<ParameterType>::get() const
+    {
+		return this->data->parameter.get();
 	}
 
 	//--------------------------------------------------------------
 	template<typename ParameterType>
-	Parameter<ParameterType>::operator const ParameterType & () const{
-		return (ParameterType&)this->parameter;
-	}
-
-
-	//--------------------------------------------------------------
-	template<typename ParameterType>
-	void Parameter<ParameterType>::setName(const string & name){
-		this->parameter.setName(name);
+	const ParameterType * Parameter<ParameterType>::operator->() const
+    {
+		return this->data->parameter.operator->();
 	}
 
 	//--------------------------------------------------------------
 	template<typename ParameterType>
-	string Parameter<ParameterType>::getName() const{
-		return this->parameter.getName();
-	}
-
-
-	//--------------------------------------------------------------
-	template<typename ParameterType>
-	ParameterType Parameter<ParameterType>::getMin() const{
-		return this->parameter.getMin();
-	}
-
-
-	//--------------------------------------------------------------
-	template<typename ParameterType>
-	ParameterType Parameter<ParameterType>::getMax() const{
-		return this->parameter.getMax();
-	}
-
-
-
-	//--------------------------------------------------------------
-	template<typename ParameterType>
-	std::string Parameter<ParameterType>::toString() const{
-		return this->parameter.toString();
+	Parameter<ParameterType>::operator const ParameterType & () const
+    {
+		return (ParameterType &)this->data->parameter;
 	}
 
 	//--------------------------------------------------------------
 	template<typename ParameterType>
-	void Parameter<ParameterType>::fromString(const std::string & name){
-		return this->parameter.fromString(name);
-	}
-
-
-	//--------------------------------------------------------------
-	template<typename ParameterType>
-	void Parameter<ParameterType>::enableEvents(){
-		this->parameter->enableEvents();
+	void Parameter<ParameterType>::setName(const string & name)
+    {
+		this->data->parameter.setName(name);
 	}
 
 	//--------------------------------------------------------------
 	template<typename ParameterType>
-	void Parameter<ParameterType>::disableEvents(){
-		this->parameter->disableEvents();
+	string Parameter<ParameterType>::getName() const
+    {
+		return this->data->parameter.getName();
 	}
 
 	//--------------------------------------------------------------
 	template<typename ParameterType>
-	bool Parameter<ParameterType>::isSerializable() const{
-		return this->parameter.isSerializable();
+	ParameterType Parameter<ParameterType>::getMin() const
+    {
+		return this->data->parameter.getMin();
 	}
 
 	//--------------------------------------------------------------
 	template<typename ParameterType>
-	bool Parameter<ParameterType>::isReadOnly() const{
-		return this->parameter.isReadOnly();
+	ParameterType Parameter<ParameterType>::getMax() const
+    {
+		return this->data->parameter.getMax();
 	}
-
 
 	//--------------------------------------------------------------
 	template<typename ParameterType>
-	void Parameter<ParameterType>::makeReferenceTo(Parameter<ParameterType> & mom){
-		this->parameter.makeReference(mom.parameter);
+	string Parameter<ParameterType>::toString() const
+    {
+		return this->data->parameter.toString();
 	}
-
 
 	//--------------------------------------------------------------
 	template<typename ParameterType>
-	Parameter<ParameterType> & Parameter<ParameterType>::operator=(const Parameter<ParameterType> & v){
-		this->parameter = v.parameter;
+	void Parameter<ParameterType>::fromString(const string & name)
+    {
+		return this->data->parameter.fromString(name);
+	}
+
+    //--------------------------------------------------------------
+    template<typename ParameterType>
+    template<class ListenerClass, typename ListenerMethod>
+    void Parameter<ParameterType>::addListener(ListenerClass * listener, ListenerMethod method, int prio) 
+    {
+        this->data->parameter.addListener(listener, method, prio);
+    }
+
+    //--------------------------------------------------------------
+    template<typename ParameterType>
+    template<class ListenerClass, typename ListenerMethod>
+    void Parameter<ParameterType>::removeListener(ListenerClass * listener, ListenerMethod method, int prio) 
+    {
+        this->data->parameter.addListener(listener, method, prio);
+    }
+
+    //--------------------------------------------------------------
+    template<typename ParameterType>
+    template<typename... Args>
+    ofEventListener Parameter<ParameterType>::newListener(Args...args) 
+    {
+        return this->data->parameter.newListener(args...);
+    }
+
+	//--------------------------------------------------------------
+	template<typename ParameterType>
+	void Parameter<ParameterType>::enableEvents()
+    {
+		this->data->parameter->enableEvents();
+	}
+
+	//--------------------------------------------------------------
+	template<typename ParameterType>
+	void Parameter<ParameterType>::disableEvents()
+    {
+		this->data->parameter->disableEvents();
+	}
+
+	//--------------------------------------------------------------
+	template<typename ParameterType>
+	bool Parameter<ParameterType>::isSerializable() const
+    {
+		return this->data->parameter.isSerializable();
+	}
+
+	//--------------------------------------------------------------
+	template<typename ParameterType>
+	bool Parameter<ParameterType>::isReadOnly() const
+    {
+		return this->data->parameter.isReadOnly();
+	}
+
+	//--------------------------------------------------------------
+	template<typename ParameterType>
+	void Parameter<ParameterType>::makeReferenceTo(Parameter<ParameterType> & mom)
+    {
+		this->data->parameter.makeReference(mom.parameter);
+	}
+
+	//--------------------------------------------------------------
+	template<typename ParameterType>
+	Parameter<ParameterType> & Parameter<ParameterType>::operator=(const Parameter<ParameterType> & v)
+    {
+		this->data->parameter = v.parameter;
 		return *this;
 	}
 
 	//--------------------------------------------------------------
 	template<typename ParameterType>
-	const ParameterType & Parameter<ParameterType>::operator=(const ParameterType & v){
-		this->parameter = v;
-		return get();
-	}
-
-
-	//--------------------------------------------------------------
-	template<typename ParameterType>
-	ParameterType Parameter<ParameterType>::operator++(int v){
-		return this->parameter.operator++(v);
+	const ParameterType & Parameter<ParameterType>::operator=(const ParameterType & v)
+    {
+		this->data->parameter = v;
+		return this->get();
 	}
 
 	//--------------------------------------------------------------
 	template<typename ParameterType>
-	Parameter<ParameterType> & Parameter<ParameterType>::operator++(){
-		this->parameter.operator++();
+	ParameterType Parameter<ParameterType>::operator++(int v)
+    {
+		return this->data->parameter.operator++(v);
+	}
+
+	//--------------------------------------------------------------
+	template<typename ParameterType>
+	Parameter<ParameterType> & Parameter<ParameterType>::operator++()
+    {
+		this->data->parameter.operator++();
 		return *this;
 	}
 
-
 	//--------------------------------------------------------------
 	template<typename ParameterType>
-	ParameterType Parameter<ParameterType>::operator--(int v){
-		return this->parameter.operator--(v);
+	ParameterType Parameter<ParameterType>::operator--(int v)
+    {
+		return this->data->parameter.operator--(v);
 	}
 
 	//--------------------------------------------------------------
 	template<typename ParameterType>
-	Parameter<ParameterType> & Parameter<ParameterType>::operator--(){
-		this->parameter.operator--();
+	Parameter<ParameterType> & Parameter<ParameterType>::operator--()
+    {
+		this->data->parameter.operator--();
 		return *this;
 	}
-
 
 	//--------------------------------------------------------------
 	template<typename ParameterType>
 	template<typename OtherType>
-	Parameter<ParameterType> & Parameter<ParameterType>::operator+=(const OtherType & v){
-		this->parameter.operator+(v);
+	Parameter<ParameterType> & Parameter<ParameterType>::operator+=(const OtherType & v)
+    {
+		this->data->parameter.operator+(v);
 		return *this;
 	}
 
 	//--------------------------------------------------------------
 	template<typename ParameterType>
 	template<typename OtherType>
-	Parameter<ParameterType> & Parameter<ParameterType>::operator-=(const OtherType & v){
-		this->parameter.operator-=(v);
+	Parameter<ParameterType> & Parameter<ParameterType>::operator-=(const OtherType & v)
+    {
+		this->data->parameter.operator-=(v);
 		return *this;
 	}
 
@@ -284,140 +329,160 @@ namespace ofxPreset
 	template<typename ParameterType>
 	template<typename OtherType>
 	Parameter<ParameterType> & Parameter<ParameterType>::operator*=(const OtherType & v){
-		this->parameter.operator*=(v);
+		this->data->parameter.operator*=(v);
 		return *this;
 	}
 
 	//--------------------------------------------------------------
 	template<typename ParameterType>
 	template<typename OtherType>
-	Parameter<ParameterType> & Parameter<ParameterType>::operator/=(const OtherType & v){
-		this->parameter.operator/=(v);
+	Parameter<ParameterType> & Parameter<ParameterType>::operator/=(const OtherType & v)
+    {
+		this->data->parameter.operator/=(v);
 		return *this;
 	}
 
 	//--------------------------------------------------------------
 	template<typename ParameterType>
 	template<typename OtherType>
-	Parameter<ParameterType> & Parameter<ParameterType>::operator%=(const OtherType & v){
-		this->parameter.operator%=(v);
+	Parameter<ParameterType> & Parameter<ParameterType>::operator%=(const OtherType & v)
+    {
+		this->data->parameter.operator%=(v);
 		return *this;
 	}
 
 	//--------------------------------------------------------------
 	template<typename ParameterType>
 	template<typename OtherType>
-	Parameter<ParameterType> & Parameter<ParameterType>::operator&=(const OtherType & v){
-		this->parameter.operator&=(v);
+	Parameter<ParameterType> & Parameter<ParameterType>::operator&=(const OtherType & v)
+    {
+		this->data->parameter.operator&=(v);
 		return *this;
 	}
 
 	//--------------------------------------------------------------
 	template<typename ParameterType>
 	template<typename OtherType>
-	Parameter<ParameterType> & Parameter<ParameterType>::operator|=(const OtherType & v){
-		this->parameter.operator|=(v);
+	Parameter<ParameterType> & Parameter<ParameterType>::operator|=(const OtherType & v)
+    {
+		this->data->parameter.operator|=(v);
 		return *this;
 	}
 
 	//--------------------------------------------------------------
 	template<typename ParameterType>
 	template<typename OtherType>
-	Parameter<ParameterType> & Parameter<ParameterType>::operator^=(const OtherType & v){
-		this->parameter.operator^=(v);
+	Parameter<ParameterType> & Parameter<ParameterType>::operator^=(const OtherType & v)
+    {
+		this->data->parameter.operator^=(v);
 		return *this;
 	}
 
 	//--------------------------------------------------------------
 	template<typename ParameterType>
 	template<typename OtherType>
-	Parameter<ParameterType> & Parameter<ParameterType>::operator<<=(const OtherType & v){
-		this->parameter.operator<<=(v);
+	Parameter<ParameterType> & Parameter<ParameterType>::operator<<=(const OtherType & v)
+    {
+		this->data->parameter.operator<<=(v);
 		return *this;
 	}
 
 	//--------------------------------------------------------------
 	template<typename ParameterType>
 	template<typename OtherType>
-	Parameter<ParameterType> & Parameter<ParameterType>::operator>>=(const OtherType & v){
-		this->parameter.operator>>=(v);
-		return *this;
-	}
-
-
-
-	//--------------------------------------------------------------
-	template<typename ParameterType>
-	Parameter<ParameterType> & Parameter<ParameterType>::set(const ParameterType & v){
-		this->parameter.set(v);
+	Parameter<ParameterType> & Parameter<ParameterType>::operator>>=(const OtherType & v)
+    {
+		this->data->parameter.operator>>=(v);
 		return *this;
 	}
 
 	//--------------------------------------------------------------
 	template<typename ParameterType>
-	Parameter<ParameterType> & Parameter<ParameterType>::set(const string& name, const ParameterType & v){
-		this->parameter.set(name, v);
+	Parameter<ParameterType> & Parameter<ParameterType>::set(const ParameterType & v)
+    {
+		this->data->parameter.set(v);
 		return *this;
 	}
 
 	//--------------------------------------------------------------
 	template<typename ParameterType>
-	Parameter<ParameterType> & Parameter<ParameterType>::set(const string& name, const ParameterType & v, const ParameterType & min, const ParameterType & max){
-		this->parameter.set(name, v, min, max);
+	Parameter<ParameterType> & Parameter<ParameterType>::set(const string & name, const ParameterType & v)
+    {
+		this->data->parameter.set(name, v);
 		return *this;
 	}
 
-
 	//--------------------------------------------------------------
 	template<typename ParameterType>
-	Parameter<ParameterType> & Parameter<ParameterType>::setWithoutEventNotifications(const ParameterType & v){
-		this->parameter.setWithoutEventNotifications(v);
+	Parameter<ParameterType> & Parameter<ParameterType>::set(const string & name, const ParameterType & v, const ParameterType & min, const ParameterType & max)
+    {
+		this->data->parameter.set(name, v, min, max);
 		return *this;
 	}
 
+	//--------------------------------------------------------------
+	template<typename ParameterType>
+    Parameter<ParameterType> & Parameter<ParameterType>::setWithoutEventNotifications(const ParameterType & v)
+    {
+        this->data->parameter.setWithoutEventNotifications(v);
+        return *this;
+    }
 
 	//--------------------------------------------------------------
 	template<typename ParameterType>
-	void Parameter<ParameterType>::setMin(const ParameterType & min){
-		this->parameter.setMin(min);
+	void Parameter<ParameterType>::setMin(const ParameterType & min)
+    {
+		this->data->parameter.setMin(min);
 	}
 
 	//--------------------------------------------------------------
 	template<typename ParameterType>
-	void Parameter<ParameterType>::setMax(const ParameterType & max){
-		this->parameter.setMax(max);
-	}
-
-
-	//--------------------------------------------------------------
-	template<typename ParameterType>
-	void Parameter<ParameterType>::setSerializable(bool serializable){
-		this->parameter.setSerializable(serializable);
+	void Parameter<ParameterType>::setMax(const ParameterType & max)
+    {
+		this->data->parameter.setMax(max);
 	}
 
 	//--------------------------------------------------------------
 	template<typename ParameterType>
-	shared_ptr<ofAbstractParameter> Parameter<ParameterType>::newReference() const{
-		ofParameter<ParameterType> newParameter(this->parameter);
-		return shared_ptr<Parameter<ParameterType>>(new Parameter<ParameterType>(std::move(newParameter), this->autoUpdating));
-	}
-
-
-	//--------------------------------------------------------------
-	template<typename ParameterType>
-	void Parameter<ParameterType>::setParent(ofParameterGroup & _parent){
-		this->parameter.setParent(_parent);
+	void Parameter<ParameterType>::setSerializable(bool serializable)
+    {
+		this->data->parameter.setSerializable(serializable);
 	}
 
 	//--------------------------------------------------------------
 	template<typename ParameterType>
-	size_t Parameter<ParameterType>::getNumListeners() const{
-		return this->parameter.getNumListeners();
+	shared_ptr<ofAbstractParameter> Parameter<ParameterType>::newReference() const
+    {
+		return make_shared<Parameter<ParameterType>>(this->data);
+        //ofParameter<ParameterType> newParameter(this->parameter);
+        //return shared_ptr<Parameter<ParameterType>>(new Parameter<ParameterType>(std::move(newParameter), this->autoUpdating));
+    }
+
+	//--------------------------------------------------------------
+	template<typename ParameterType>
+	void Parameter<ParameterType>::setParent(ofParameterGroup & parent)
+    {
+		this->data->parameter.setParent(parent);
+	}
+
+    //--------------------------------------------------------------
+    template<typename ParameterType>
+    const ofParameterGroup Parameter<ParameterType>::getFirstParent() const
+    {
+        return this->data->parameter.getFirstParent();
+    }
+
+	//--------------------------------------------------------------
+	template<typename ParameterType>
+	size_t Parameter<ParameterType>::getNumListeners() const
+    {
+		return this->data->parameter.getNumListeners();
 	}
 
 	//--------------------------------------------------------------
 	template<typename ParameterType>
-	const void* Parameter<ParameterType>::getInternalObject() const{
-		return this->parameter.getInternalObject();
+	const void * Parameter<ParameterType>::getInternalObject() const
+    {
+        return this->data.get();
 	}
 }
