@@ -140,6 +140,13 @@ namespace ofxPreset
 
 	//--------------------------------------------------------------
 	template<typename ParameterType>
+	ofParameter<ParameterType> * Parameter<ParameterType>::getInternal()
+	{
+		return &this->data->parameter;
+	}
+
+	//--------------------------------------------------------------
+	template<typename ParameterType>
 	const ParameterType & Parameter<ParameterType>::get() const
     {
 		return this->data->parameter.get();
@@ -453,9 +460,7 @@ namespace ofxPreset
 	shared_ptr<ofAbstractParameter> Parameter<ParameterType>::newReference() const
     {
 		return make_shared<Parameter<ParameterType>>(this->data);
-        //ofParameter<ParameterType> newParameter(this->parameter);
-        //return shared_ptr<Parameter<ParameterType>>(new Parameter<ParameterType>(std::move(newParameter), this->autoUpdating));
-    }
+	}
 
 	//--------------------------------------------------------------
 	template<typename ParameterType>

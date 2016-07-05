@@ -56,6 +56,8 @@ namespace ofxPreset
         virtual void fromString(const string & name) override;
         
         ParameterType * getRef();
+		ofParameter<ParameterType> * getInternal();
+
         const ParameterType & get() const;
         const ParameterType * operator->() const;
         operator const ParameterType & () const;
