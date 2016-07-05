@@ -7,32 +7,29 @@
 static const int kGuiMargin = 10;
 
 namespace ofxPreset
-{
-	struct GuiSettings
+{	
+    class Gui
 	{
-		GuiSettings()
-		{
-			this->windowPos = ofVec2f(kGuiMargin, kGuiMargin);
-			this->windowSize = ofVec2f::zero();
-			this->mouseOverGui = false;
-		}
-		
-		ofVec2f windowPos;
-		ofVec2f windowSize;
-		bool mouseOverGui;
-	};
-	
-	class Gui
-	{
+    public:
+        struct Settings
+        {
+            inline Settings();
+
+            ofVec2f windowPos;
+            ofVec2f windowSize;
+            bool windowBlock;
+            bool mouseOverGui;
+        };
+
 	public:
-		static inline void SetNextWindow(GuiSettings & settings);
+		static inline void SetNextWindow(Settings & settings);
 
-		static inline bool BeginWindow(Parameter<bool> & parameter, const GuiSettings & settings, bool collapse = true);
-		static inline bool BeginWindow(const string & name, const GuiSettings & settings, bool collapse = true, bool * opened = nullptr);
+		static inline bool BeginWindow(Parameter<bool> & parameter, Settings & settings, bool collapse = true);
+		static inline bool BeginWindow(const string & name, Settings & settings, bool collapse = true, bool * opened = nullptr);
 	
-		static inline void EndWindow(GuiSettings & settings);
+		static inline void EndWindow(Settings & settings);
 
-		static inline void AddGroup(ofParameterGroup & group, GuiSettings & settings, bool window = true);
+		static inline void AddGroup(ofParameterGroup & group, Settings & settings);
 	
         static inline bool AddParameter(Parameter<ofVec2f> & parameter);
         static inline bool AddParameter(Parameter<ofVec3f> & parameter);
@@ -45,7 +42,7 @@ namespace ofxPreset
 
 		static inline void AddImage(ofBaseHasTexture & hasTexture, const ofVec2f & size);
 		static inline void AddImage(ofTexture & texture, const ofVec2f & size);
-	};
+    };
 }
 
 #include "Gui.inl"

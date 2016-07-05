@@ -2,32 +2,56 @@
 
 namespace ofxPreset
 {
-	//--------------------------------------------------------------
-	void Gui::SetNextWindow(GuiSettings & settings)
+    //--------------------------------------------------------------
+    Gui::Settings::Settings()
+        : windowPos(kGuiMargin, kGuiMargin)
+        , windowSize(ofVec2f::zero())
+        , windowBlock(false)
+        , mouseOverGui(false)
+    {}
+    
+    //--------------------------------------------------------------
+	void Gui::SetNextWindow(Settings & settings)
 	{
 		settings.windowSize.x = 0;
 		settings.windowPos.y += settings.windowSize.y + kGuiMargin;
 	}
 
 	//--------------------------------------------------------------
-	bool Gui::BeginWindow(Parameter<bool> & parameter, const GuiSettings & settings, bool collapse)
+	bool Gui::BeginWindow(Parameter<bool> & parameter, Settings & settings, bool collapse)
 	{
-		return Gui::BeginWindow(parameter.getName(), settings, collapse, parameter.getRef());
+        return Gui::BeginWindow(parameter.getName(), settings, collapse, parameter.getRef());
 	}
 	
 	//--------------------------------------------------------------
-	bool Gui::BeginWindow(const string & name, const GuiSettings & settings, bool collapse, bool * opened)
+	bool Gui::BeginWindow(const string & name, Settings & settings, bool collapse, bool * opened)
 	{
-		ImGui::SetNextWindowPos(settings.windowPos, ImGuiSetCond_Appearing);
+        if (settings.windowBlock)
+        {
+            ofLogWarning("Gui::BeginWindow") << "Already inside a window block!";
+            return false;
+        }
+
+        settings.windowBlock = true;
+        
+        ImGui::SetNextWindowPos(settings.windowPos, ImGuiSetCond_Appearing);
 		ImGui::SetNextWindowSize(settings.windowSize, ImGuiSetCond_Appearing);
 		ImGui::SetNextWindowCollapsed(collapse, ImGuiSetCond_Appearing);
 		return ImGui::Begin(name.c_str(), opened, ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_AlwaysAutoResize | (collapse ?  0 : ImGuiWindowFlags_NoCollapse));
 	}
 
 	//--------------------------------------------------------------
-	void Gui::EndWindow(GuiSettings & settings)
+	void Gui::EndWindow(Settings & settings)
 	{
-		settings.windowPos = ImGui::GetWindowPos();
+        if (!settings.windowBlock)
+        {
+            ofLogWarning("Gui::EndWindow") << "Not inside a window block!";
+            return;
+        }
+
+        settings.windowBlock = false;
+        
+        settings.windowPos = ImGui::GetWindowPos();
 		settings.windowSize = ImGui::GetWindowSize();
 		ImGui::End();
 
@@ -36,12 +60,21 @@ namespace ofxPreset
 	}
 
 	//--------------------------------------------------------------
-	void Gui::AddGroup(ofParameterGroup & group, GuiSettings & settings, bool window)
+	void Gui::AddGroup(ofParameterGroup & group, Settings & settings)
 	{
-		if (window)
-		{
-			Gui::BeginWindow(group.getName().c_str(), settings);
+        bool prevWindowBlock = settings.windowBlock;
+        if (settings.windowBlock)
+        {
+            if (!ImGui::CollapsingHeader(group.getName().c_str(), nullptr, true, true))
+            {
+                return;
+            }
+        }
+        else
+        {
+            Gui::BeginWindow(group.getName().c_str(), settings);
 		}
+
 		for (auto parameter : group)
 		{
 			// Group.
@@ -49,7 +82,7 @@ namespace ofxPreset
 			if (parameterGroup)
 			{
 				// Recurse through contents.
-				Gui::AddGroup(*parameterGroup, settings, false);
+				Gui::AddGroup(*parameterGroup, settings);
 				continue;
 			}
 
@@ -99,9 +132,11 @@ namespace ofxPreset
 
 			ofLogWarning("Gui::AddGroup") << "Could not create GUI element for parameter " << parameter->getName();
 		}
-		if (window)
+
+        // Only end window if we created it.
+        if (settings.windowBlock && !prevWindowBlock)
 		{
-			Gui::EndWindow(settings);
+            Gui::EndWindow(settings);
 		}
 	}
 
