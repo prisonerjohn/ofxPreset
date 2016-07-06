@@ -140,9 +140,9 @@ namespace ofxPreset
 
 	//--------------------------------------------------------------
 	template<typename ParameterType>
-	ofParameter<ParameterType> * Parameter<ParameterType>::getInternal()
+	shared_ptr<ofParameter<ParameterType>> Parameter<ParameterType>::getInternal()
 	{
-		return &this->data->parameter;
+		return dynamic_pointer_cast<ofParameter<ParameterType>>(this->data->parameter.newReference());
 	}
 
 	//--------------------------------------------------------------
