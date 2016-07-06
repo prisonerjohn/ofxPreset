@@ -50,6 +50,21 @@ namespace ofxPreset
 
 		static inline bool AddRange(const string & name, Parameter<float> & parameterMin, Parameter<float> & parameterMax, float speed = 0.01f);
 
+		static inline bool AddValues(const string & name, vector<glm::tvec2<int>> & values, int minValue, int maxValue);
+		static inline bool AddValues(const string & name, vector<glm::tvec3<int>> & values, int minValue, int maxValue);
+		static inline bool AddValues(const string & name, vector<glm::tvec4<int>> & values, int minValue, int maxValue);
+
+		static inline bool AddValues(const string & name, vector<glm::vec2> & values, float minValue, float maxValue);
+		static inline bool AddValues(const string & name, vector<glm::vec3> & values, float minValue, float maxValue);
+		static inline bool AddValues(const string & name, vector<glm::vec4> & values, float minValue, float maxValue);
+
+		static inline bool AddValues(const string & name, vector<ofVec2f> & values, float minValue, float maxValue);
+		static inline bool AddValues(const string & name, vector<ofVec3f> & values, float minValue, float maxValue);
+		static inline bool AddValues(const string & name, vector<ofVec4f> & values, float minValue, float maxValue);
+
+		template<typename DataType>
+		static inline bool AddValues(const string & name, vector<DataType> & values, DataType minValue, DataType maxValue);
+
 		static inline void AddImage(ofBaseHasTexture & hasTexture, const ofVec2f & size);
 		static inline void AddImage(ofTexture & texture, const ofVec2f & size);
     };

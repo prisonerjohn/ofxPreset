@@ -299,6 +299,146 @@ namespace ofxPreset
 	}
 
 	//--------------------------------------------------------------
+	bool Gui::AddValues(const string & name, vector<glm::tvec2<int>> & values, int minValue, int maxValue)
+	{
+		auto result = false;
+		for (int i = 0; i < values.size(); ++i)
+		{
+			const auto iname = name + " " + ofToString(i);
+			result |= ImGui::SliderInt2(iname.c_str(), glm::value_ptr(values[i]), minValue, maxValue);
+		}
+		return result;
+	}
+	
+	//--------------------------------------------------------------
+	bool Gui::AddValues(const string & name, vector<glm::tvec3<int>> & values, int minValue, int maxValue)
+	{
+		auto result = false;
+		for (int i = 0; i < values.size(); ++i)
+		{
+			const auto iname = name + " " + ofToString(i);
+			result |= ImGui::SliderInt3(iname.c_str(), glm::value_ptr(values[i]), minValue, maxValue);
+		}
+		return result;
+	}
+	
+	//--------------------------------------------------------------
+	bool Gui::AddValues(const string & name, vector<glm::tvec4<int>> & values, int minValue, int maxValue)
+	{
+		auto result = false;
+		for (int i = 0; i < values.size(); ++i)
+		{
+			const auto iname = name + " " + ofToString(i);
+			result |= ImGui::SliderInt4(iname.c_str(), glm::value_ptr(values[i]), minValue, maxValue);
+		}
+		return result;
+	}
+
+	//--------------------------------------------------------------
+	bool Gui::AddValues(const string & name, vector<glm::vec2> & values, float minValue, float maxValue)
+	{
+		auto result = false;
+		for (int i = 0; i < values.size(); ++i)
+		{
+			const auto iname = name + " " + ofToString(i);
+			result |= ImGui::SliderFloat2(iname.c_str(), glm::value_ptr(values[i]), minValue, maxValue);
+		}
+		return result;
+	}
+	
+	//--------------------------------------------------------------
+	bool Gui::AddValues(const string & name, vector<glm::vec3> & values, float minValue, float maxValue)
+	{
+		auto result = false;
+		for (int i = 0; i < values.size(); ++i)
+		{
+			const auto iname = name + " " + ofToString(i);
+			result |= ImGui::SliderFloat3(iname.c_str(), glm::value_ptr(values[i]), minValue, maxValue);
+		}
+		return result;
+	}
+	
+	//--------------------------------------------------------------
+	bool Gui::AddValues(const string & name, vector<glm::vec4> & values, float minValue, float maxValue)
+	{
+		auto result = false;
+		for (int i = 0; i < values.size(); ++i)
+		{
+			const auto iname = name + " " + ofToString(i);
+			result |= ImGui::SliderFloat4(iname.c_str(), glm::value_ptr(values[i]), minValue, maxValue);
+		}
+		return result;
+	}
+
+	//--------------------------------------------------------------
+	bool Gui::AddValues(const string & name, vector<ofVec2f> & values, float minValue, float maxValue)
+	{
+		auto result = false;
+		for (int i = 0; i < values.size(); ++i)
+		{
+			const auto iname = name + " " + ofToString(i);
+			result |= ImGui::SliderFloat2(iname.c_str(), values[i].getPtr(), minValue, maxValue);
+		}
+		return result;
+	}
+	
+	//--------------------------------------------------------------
+	bool Gui::AddValues(const string & name, vector<ofVec3f> & values, float minValue, float maxValue)
+	{
+		auto result = false;
+		for (int i = 0; i < values.size(); ++i)
+		{
+			const auto iname = name + " " + ofToString(i);
+			result |= ImGui::SliderFloat3(iname.c_str(), values[i].getPtr(), minValue, maxValue);
+		}
+		return result;
+	}
+	
+	//--------------------------------------------------------------
+	bool Gui::AddValues(const string & name, vector<ofVec4f> & values, float minValue, float maxValue)
+	{
+		auto result = false;
+		for (int i = 0; i < values.size(); ++i)
+		{
+			const auto iname = name + " " + ofToString(i);
+			result |= ImGui::SliderFloat4(iname.c_str(), values[i].getPtr(), minValue, maxValue);
+		}
+		return result;
+	}
+
+	//--------------------------------------------------------------
+	template<typename DataType>
+	bool Gui::AddValues(const string & name, vector<DataType> & values, DataType minValue, DataType maxValue)
+	{
+		auto result = false;
+
+		const auto & info = typeid(DataType);
+		for (int i = 0; i < values.size(); ++i)
+		{
+			const auto iname = name + " " + ofToString(i);
+			if (info == typeid(float))
+			{
+				result |= ImGui::SliderFloat(iname.c_str(), *values[i], minValue, maxValue);
+			}
+			else if (info == typeid(int))
+			{
+				result |= ImGui::SliderInt(iname.c_str(), *values[i], minValue, maxValue);
+			}
+			else if (info == typeid(bool))
+			{
+				result |= ImGui::Checkbox(iname.c_str(), *values[i]);
+			}
+			else
+			{
+				ofLogWarning("Gui::AddValues") << "Could not create GUI element for type " << info.name();
+				return false;
+			}
+		}
+
+		return result;
+	}
+
+	//--------------------------------------------------------------
 	void Gui::AddImage(ofBaseHasTexture & hasTexture, const ofVec2f & size)
 	{
 		Gui::AddImage(hasTexture.getTexture(), size);

@@ -3,6 +3,47 @@
 namespace ofxPreset
 {
 	//--------------------------------------------------------------
+	template<typename DataType>
+	nlohmann::json & Serializer::Serialize(nlohmann::json & json, const vector<DataType> & values, const string & name)
+	{
+		auto & jsonGroup = name.empty() ? json : json[name];
+		
+		for (const auto & val : values)
+		{
+			ostringstream oss;
+			oss << val;
+			jsonGroup.push_back(oss.str());
+		}
+
+		return jsonGroup;
+	}
+	
+	//--------------------------------------------------------------
+	template<typename DataType>
+	const nlohmann::json & Serializer::Deserialize(const nlohmann::json & json, vector<DataType> & values, const string & name)
+	{
+		if (!name.empty() && !json.count(name))
+		{
+			ofLogWarning("Serializer::Deserialize") << "Name " << name << " not found in JSON!";
+			return json;
+		}
+
+		const auto & jsonGroup = name.empty() ? json : json[name];
+		values.clear();
+
+		for (const auto & jsonValue : jsonGroup)
+		{	
+			istringstream iss;
+			iss.str(jsonValue);
+			DataType val;
+			iss >> val;
+			values.push_back(val);
+		}
+
+		return jsonGroup;
+	}
+	
+	//--------------------------------------------------------------
 	nlohmann::json & Serializer::Serialize(nlohmann::json & json, const ofAbstractParameter & parameter)
 	{
 		const auto name = parameter.getName();
