@@ -10,16 +10,16 @@ namespace ofxPreset
 {	
     class Gui
 	{
-    public:
-        struct Settings
-        {
-            inline Settings();
+	public:
+		struct Settings
+		{
+			inline Settings();
 
-            ofVec2f windowPos;
-            ofVec2f windowSize;
-            bool windowBlock;
-            bool mouseOverGui;
-        };
+			ofVec2f windowPos;
+			ofVec2f windowSize;
+			bool windowBlock;
+			bool mouseOverGui;
+		};
 
 	public:
 		static inline void SetNextWindow(Settings & settings);

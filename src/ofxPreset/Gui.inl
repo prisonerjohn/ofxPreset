@@ -2,15 +2,15 @@
 
 namespace ofxPreset
 {
-    //--------------------------------------------------------------
-    Gui::Settings::Settings()
-        : windowPos(kGuiMargin, kGuiMargin)
-        , windowSize(ofVec2f::zero())
-        , windowBlock(false)
-        , mouseOverGui(false)
-    {}
-    
-    //--------------------------------------------------------------
+	//--------------------------------------------------------------
+	Gui::Settings::Settings()
+		: windowPos(kGuiMargin, kGuiMargin)
+		, windowSize(ofVec2f::zero())
+		, windowBlock(false)
+		, mouseOverGui(false)
+	{}
+
+	//--------------------------------------------------------------
 	void Gui::SetNextWindow(Settings & settings)
 	{
 		settings.windowSize.x = 0;
@@ -20,38 +20,38 @@ namespace ofxPreset
 	//--------------------------------------------------------------
 	bool Gui::BeginWindow(Parameter<bool> & parameter, Settings & settings, bool collapse)
 	{
-        return Gui::BeginWindow(parameter.getName(), settings, collapse, parameter.getRef());
+		return Gui::BeginWindow(parameter.getName(), settings, collapse, parameter.getRef());
 	}
-	
+
 	//--------------------------------------------------------------
 	bool Gui::BeginWindow(const string & name, Settings & settings, bool collapse, bool * opened)
 	{
-        if (settings.windowBlock)
-        {
-            ofLogWarning("Gui::BeginWindow") << "Already inside a window block!";
-            return false;
-        }
+		if (settings.windowBlock)
+		{
+			ofLogWarning("Gui::BeginWindow") << "Already inside a window block!";
+			return false;
+		}
 
-        settings.windowBlock = true;
-        
-        ImGui::SetNextWindowPos(settings.windowPos, ImGuiSetCond_Appearing);
+		settings.windowBlock = true;
+
+		ImGui::SetNextWindowPos(settings.windowPos, ImGuiSetCond_Appearing);
 		ImGui::SetNextWindowSize(settings.windowSize, ImGuiSetCond_Appearing);
 		ImGui::SetNextWindowCollapsed(collapse, ImGuiSetCond_Appearing);
-		return ImGui::Begin(name.c_str(), opened, ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_AlwaysAutoResize | (collapse ?  0 : ImGuiWindowFlags_NoCollapse));
+		return ImGui::Begin(name.c_str(), opened, ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_AlwaysAutoResize | (collapse ? 0 : ImGuiWindowFlags_NoCollapse));
 	}
 
 	//--------------------------------------------------------------
 	void Gui::EndWindow(Settings & settings)
 	{
-        if (!settings.windowBlock)
-        {
-            ofLogWarning("Gui::EndWindow") << "Not inside a window block!";
-            return;
-        }
+		if (!settings.windowBlock)
+		{
+			ofLogWarning("Gui::EndWindow") << "Not inside a window block!";
+			return;
+		}
 
-        settings.windowBlock = false;
-        
-        settings.windowPos = ImGui::GetWindowPos();
+		settings.windowBlock = false;
+
+		settings.windowPos = ImGui::GetWindowPos();
 		settings.windowSize = ImGui::GetWindowSize();
 		ImGui::End();
 
@@ -62,17 +62,17 @@ namespace ofxPreset
 	//--------------------------------------------------------------
 	void Gui::AddGroup(ofParameterGroup & group, Settings & settings)
 	{
-        bool prevWindowBlock = settings.windowBlock;
-        if (settings.windowBlock)
-        {
-            if (!ImGui::CollapsingHeader(group.getName().c_str(), nullptr, true, true))
-            {
-                return;
-            }
-        }
-        else
-        {
-            Gui::BeginWindow(group.getName().c_str(), settings);
+		bool prevWindowBlock = settings.windowBlock;
+		if (settings.windowBlock)
+		{
+			if (!ImGui::CollapsingHeader(group.getName().c_str(), nullptr, true, true))
+			{
+				return;
+			}
+		}
+		else
+		{
+			Gui::BeginWindow(group.getName().c_str(), settings);
 		}
 
 		for (auto parameter : group)
@@ -133,10 +133,10 @@ namespace ofxPreset
 			ofLogWarning("Gui::AddGroup") << "Could not create GUI element for parameter " << parameter->getName();
 		}
 
-        // Only end window if we created it.
-        if (settings.windowBlock && !prevWindowBlock)
+		// Only end window if we created it.
+		if (settings.windowBlock && !prevWindowBlock)
 		{
-            Gui::EndWindow(settings);
+			Gui::EndWindow(settings);
 		}
 	}
 
@@ -173,82 +173,82 @@ namespace ofxPreset
 		return false;
 	}
 
-    //--------------------------------------------------------------
-    bool Gui::AddParameter(Parameter<glm::vec2> & parameter)
-    {
-        if (ImGui::SliderFloat2(parameter.getName().c_str(), glm::value_ptr(*parameter.getRef()), parameter.getMin().x, parameter.getMax().x))
-        {
-            parameter.update();
-            return true;
-        }
-        return false;
-    }
+	//--------------------------------------------------------------
+	bool Gui::AddParameter(Parameter<glm::vec2> & parameter)
+	{
+		if (ImGui::SliderFloat2(parameter.getName().c_str(), glm::value_ptr(*parameter.getRef()), parameter.getMin().x, parameter.getMax().x))
+		{
+			parameter.update();
+			return true;
+		}
+		return false;
+	}
 
-    //--------------------------------------------------------------
-    bool Gui::AddParameter(Parameter<glm::vec3> & parameter)
-    {
-        if (ImGui::SliderFloat3(parameter.getName().c_str(), glm::value_ptr(*parameter.getRef()), parameter.getMin().x, parameter.getMax().x))
-        {
-            parameter.update();
-            return true;
-        }
-        return false;
-    }
+	//--------------------------------------------------------------
+	bool Gui::AddParameter(Parameter<glm::vec3> & parameter)
+	{
+		if (ImGui::SliderFloat3(parameter.getName().c_str(), glm::value_ptr(*parameter.getRef()), parameter.getMin().x, parameter.getMax().x))
+		{
+			parameter.update();
+			return true;
+		}
+		return false;
+	}
 
-    //--------------------------------------------------------------
-    bool Gui::AddParameter(Parameter<glm::vec4> & parameter)
-    {
-        if (ImGui::SliderFloat4(parameter.getName().c_str(), glm::value_ptr(*parameter.getRef()), parameter.getMin().x, parameter.getMax().x))
-        {
-            parameter.update();
-            return true;
-        }
-        return false;
-    }
+	//--------------------------------------------------------------
+	bool Gui::AddParameter(Parameter<glm::vec4> & parameter)
+	{
+		if (ImGui::SliderFloat4(parameter.getName().c_str(), glm::value_ptr(*parameter.getRef()), parameter.getMin().x, parameter.getMax().x))
+		{
+			parameter.update();
+			return true;
+		}
+		return false;
+	}
 
-    //--------------------------------------------------------------
-    bool Gui::AddParameter(Parameter<ofVec2f> & parameter)
-    {
+	//--------------------------------------------------------------
+	bool Gui::AddParameter(Parameter<ofVec2f> & parameter)
+	{
 		if (ImGui::SliderFloat2(parameter.getName().c_str(), parameter.getRef()->getPtr(), parameter.getMin().x, parameter.getMax().x))
 		{
 			parameter.update();
 			return true;
 		}
 		return false;
-    }
+	}
 
-    //--------------------------------------------------------------
-    bool Gui::AddParameter(Parameter<ofVec3f> & parameter)
-    {
+	//--------------------------------------------------------------
+	bool Gui::AddParameter(Parameter<ofVec3f> & parameter)
+	{
 		if (ImGui::SliderFloat3(parameter.getName().c_str(), parameter.getRef()->getPtr(), parameter.getMin().x, parameter.getMax().x))
 		{
 			parameter.update();
 			return true;
 		}
 		return false;
-    }
+	}
 
-    //--------------------------------------------------------------
-    bool Gui::AddParameter(Parameter<ofVec4f> & parameter)
-    {
+	//--------------------------------------------------------------
+	bool Gui::AddParameter(Parameter<ofVec4f> & parameter)
+	{
 		if (ImGui::SliderFloat4(parameter.getName().c_str(), parameter.getRef()->getPtr(), parameter.getMin().x, parameter.getMax().x))
 		{
 			parameter.update();
 			return true;
 		}
 		return false;
-    }
+	}
 
-    //--------------------------------------------------------------
-    bool Gui::AddParameter(Parameter<ofFloatColor> & parameter)
-    {
+	//--------------------------------------------------------------
+	bool Gui::AddParameter(Parameter<ofFloatColor> & parameter)
+	{
 		if (ImGui::ColorEdit4(parameter.getName().c_str(), &(parameter.getRef()->r)))
 		{
 			parameter.update();
 			return true;
 		}
 		return false;
-    }
+	}
 
 	//--------------------------------------------------------------
 	template<typename ParameterType>
@@ -309,7 +309,7 @@ namespace ofxPreset
 		}
 		return result;
 	}
-	
+
 	//--------------------------------------------------------------
 	bool Gui::AddValues(const string & name, vector<glm::tvec3<int>> & values, int minValue, int maxValue)
 	{
@@ -321,7 +321,7 @@ namespace ofxPreset
 		}
 		return result;
 	}
-	
+
 	//--------------------------------------------------------------
 	bool Gui::AddValues(const string & name, vector<glm::tvec4<int>> & values, int minValue, int maxValue)
 	{
@@ -345,7 +345,7 @@ namespace ofxPreset
 		}
 		return result;
 	}
-	
+
 	//--------------------------------------------------------------
 	bool Gui::AddValues(const string & name, vector<glm::vec3> & values, float minValue, float maxValue)
 	{
@@ -357,7 +357,7 @@ namespace ofxPreset
 		}
 		return result;
 	}
-	
+
 	//--------------------------------------------------------------
 	bool Gui::AddValues(const string & name, vector<glm::vec4> & values, float minValue, float maxValue)
 	{
@@ -381,7 +381,7 @@ namespace ofxPreset
 		}
 		return result;
 	}
-	
+
 	//--------------------------------------------------------------
 	bool Gui::AddValues(const string & name, vector<ofVec3f> & values, float minValue, float maxValue)
 	{
@@ -393,7 +393,7 @@ namespace ofxPreset
 		}
 		return result;
 	}
-	
+
 	//--------------------------------------------------------------
 	bool Gui::AddValues(const string & name, vector<ofVec4f> & values, float minValue, float maxValue)
 	{
@@ -443,7 +443,7 @@ namespace ofxPreset
 	{
 		Gui::AddImage(hasTexture.getTexture(), size);
 	}
-	
+
 	//--------------------------------------------------------------
 	void Gui::AddImage(ofTexture & texture, const ofVec2f & size)
 	{
