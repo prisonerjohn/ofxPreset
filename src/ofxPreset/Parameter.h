@@ -77,6 +77,7 @@ namespace ofxPreset
 		bool isReadOnly() const;
 
 		void makeReferenceTo(Parameter<ParameterType> & mom);
+		void makeReferenceTo(ofParameter<ParameterType> & mom);
 
 		Parameter<ParameterType> & operator=(const Parameter<ParameterType> & v);
 		const ParameterType & operator=(const ParameterType & v);

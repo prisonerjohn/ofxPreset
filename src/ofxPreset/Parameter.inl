@@ -35,7 +35,7 @@ namespace ofxPreset
     {
         if (this->parameter.get() != this->mutableValue)
         {
-            this->parameter.setWithoutEventNotifications(this->mutableValue);
+            this->parameter.set(this->mutableValue);
         }
     }
 
@@ -251,14 +251,21 @@ namespace ofxPreset
 	template<typename ParameterType>
 	void Parameter<ParameterType>::makeReferenceTo(Parameter<ParameterType> & mom)
     {
-		this->data->parameter.makeReference(mom.parameter);
+		this->data->parameter.makeReferenceTo(mom.parameter);
 	}
+
+	//--------------------------------------------------------------
+	template<typename ParameterType>
+	void Parameter<ParameterType>::makeReferenceTo(ofParameter<ParameterType> & mom)
+    {
+		this->data->parameter.makeReferenceTo(mom);
+    }
 
 	//--------------------------------------------------------------
 	template<typename ParameterType>
 	Parameter<ParameterType> & Parameter<ParameterType>::operator=(const Parameter<ParameterType> & v)
     {
-		this->data->parameter = v.parameter;
+		this->data->parameter = v.data->parameter;
 		return *this;
 	}
 
