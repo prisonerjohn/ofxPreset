@@ -41,18 +41,18 @@ namespace ofxPreset
 		Parameter(const ParameterType & v, bool autoUpdating = false);
 		Parameter(const string & name, const ParameterType & v, bool autoUpdating = false);
 		Parameter(const string & name, const ParameterType & v, const ParameterType & min, const ParameterType & max, bool autoUpdating = false);
-        Parameter(shared_ptr<Data> data);
+		Parameter(shared_ptr<Data> data);
 
 		void update();
 
 		void setAutoUpdating(bool autoUpdating);
 		bool isAutoUpdating() const;
 
-		virtual void setName(const string & name) override;
-		virtual string getName() const override;
+		void setName(const string & name) override;
+		string getName() const override;
 
-        virtual string toString() const override;
-        virtual void fromString(const string & name) override;
+        string toString() const override;
+        void fromString(const string & name) override;
         
         ParameterType * getRef();
 		shared_ptr<ofParameter<ParameterType>> getInternal();
@@ -73,8 +73,8 @@ namespace ofxPreset
 
 		void enableEvents();
 		void disableEvents();
-		bool isSerializable() const;
-		bool isReadOnly() const;
+		bool isSerializable() const override;
+		bool isReadOnly() const override;
 
 		void makeReferenceTo(Parameter<ParameterType> & mom);
 		void makeReferenceTo(ofParameter<ParameterType> & mom);
@@ -118,14 +118,14 @@ namespace ofxPreset
 		void setMin(const ParameterType & min);
 		void setMax(const ParameterType & max);
 
-		void setSerializable(bool serializable);
-		shared_ptr<ofAbstractParameter> newReference() const;
+		void setSerializable(bool serializable) override;
+		shared_ptr<ofAbstractParameter> newReference() const override;
 
-		void setParent(ofParameterGroup & _parent);
-        const ofParameterGroup getFirstParent() const;
+		void setParent(ofParameterGroup & _parent) override;
+        const ofParameterGroup getFirstParent() const override;
 
 		size_t getNumListeners() const;
-		const void* getInternalObject() const;
+		const void * getInternalObject() const override;
 	};
 }
 
