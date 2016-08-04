@@ -9,7 +9,10 @@ namespace ofxPreset
         : autoUpdating(false)
     {
         this->setAutoUpdating(autoUpdate);
-        this->parameter.addListener(this, &Parameter::Data::onValueChanged);
+		this->onValueChangedListener = this->parameter.newListener([this](ParameterType & v)
+		{
+			this->mutableValue = v;
+		});
     }
 
     //--------------------------------------------------------------
@@ -20,15 +23,10 @@ namespace ofxPreset
         , autoUpdating(false)
     {
         this->setAutoUpdating(autoUpdate);
-        this->parameter.addListener(this, &Parameter::Data::onValueChanged);
-    }
-
-    //--------------------------------------------------------------
-    template<typename ParameterType>
-    Parameter<ParameterType>::Data::~Data()
-    {
-        this->setAutoUpdating(false);
-        this->parameter.removeListener(this, &Parameter::Data::onValueChanged);
+		this->onValueChangedListener = this->parameter.newListener([this](ParameterType & v)
+		{
+			this->mutableValue = v;
+		});
     }
 
     //--------------------------------------------------------------
@@ -47,30 +45,19 @@ namespace ofxPreset
     {
         if (this->autoUpdating == autoUpdating) return;
 
-        if (autoUpdating)
+		if (autoUpdating)
         {
-            ofAddListener(ofEvents().update, this, &Parameter::Data::onUpdate);
+			this->onUpdateListener = ofEvents().update.newListener([this](ofEventArgs & args)
+			{
+				this->update();
+			});
         }
         else
         {
-            ofRemoveListener(ofEvents().update, this, &Parameter::Data::onUpdate);
-        }
+			this->onUpdateListener.unsubscribe();
+		}
 
         this->autoUpdating = autoUpdating;
-    }
-
-    //--------------------------------------------------------------
-    template<typename ParameterType>
-    void Parameter<ParameterType>::Data::onUpdate(ofEventArgs & args)
-    {
-        this->update();
-    }
-
-    //--------------------------------------------------------------
-    template<typename ParameterType>
-    void Parameter<ParameterType>::Data::onValueChanged(ParameterType & v)
-    {
-        this->mutableValue = this->parameter.get();
     }
     
 #pragma mark Parameter

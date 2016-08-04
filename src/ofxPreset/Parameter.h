@@ -19,7 +19,6 @@ namespace ofxPreset
         public:
             Data(bool autoUpdating);
             Data(const ofParameter<ParameterType> & parameter, bool autoUpdating);
-            ~Data();
 
             void update();
             void setAutoUpdating(bool autoUpdating);
@@ -30,8 +29,8 @@ namespace ofxPreset
             bool autoUpdating;
 
         protected:
-            void onUpdate(ofEventArgs & args);
-            void onValueChanged(ParameterType & v);
+			ofEventListener onUpdateListener;
+			ofEventListener onValueChangedListener;
         };
 
         shared_ptr<Data> data;
