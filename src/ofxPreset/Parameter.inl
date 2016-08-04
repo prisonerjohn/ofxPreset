@@ -312,7 +312,7 @@ namespace ofxPreset
 	template<typename OtherType>
 	Parameter<ParameterType> & Parameter<ParameterType>::operator+=(const OtherType & v)
     {
-		this->data->parameter.operator+(v);
+		this->data->parameter.operator+=(v);
 		return *this;
 	}
 
