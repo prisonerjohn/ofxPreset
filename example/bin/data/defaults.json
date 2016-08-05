@@ -1,1 +1,24 @@
-{"App":{"Camera":{"File Path":"camera.json","Mouse Enabled":"1"},"Colors":{"Background":"0, 0, 0, 1","Foreground":"0.862745, 0.0784314, 0.235294, 1"},"Mesh":{"Enabled":"1","Size Max":"200","Size Min":"55","Speed":"0.1"},"Render":{"Fill Mode":"2","Image Path":"C:\\Users\\priso\\Workspace\\openFrameworks\\addons\\ofxPreset\\example\\bin\\data\\texture.jpg","Preview":"0","Stroke Mode":"0"}}}
+{
+    "App": {
+        "Camera": {
+            "File Path": "camera.json",
+            "Mouse Enabled": "1"
+        },
+        "Colors": {
+            "Background": "0, 0, 0, 1",
+            "Foreground": "0.862745, 0.0784314, 0.235294, 1"
+        },
+        "Mesh": {
+            "Enabled": "1",
+            "Size Max": "200",
+            "Size Min": "55",
+            "Speed": "0.1"
+        },
+        "Render": {
+            "Fill Mode": "2",
+            "Image Path": "texture.jpg",
+            "Preview": "0",
+            "Stroke Mode": "0"
+        }
+    }
+}

@@ -185,7 +185,7 @@ void ofApp::saveCamera()
 	ofxPreset::Serializer::Serialize(json, this->camera);
 
 	ofFile file(this->parameters.camera.filePath.get(), ofFile::WriteOnly);
-	file << json;
+	file << json.dump(4);
 }
 
 //--------------------------------------------------------------
@@ -206,7 +206,7 @@ bool ofApp::loadImage(const string & filePath)
 	this->texture.allocate(texData);
 	this->texture.loadData(image.getPixels());
 
-	this->parameters.render.imagePath = filePath;
+	this->parameters.render.imagePath = ofFilePath::makeRelative(ofToDataPath(""), filePath);
 	return true;
 }
 
@@ -252,7 +252,7 @@ bool ofApp::imGui()
 					auto dialogResult = ofSystemSaveDialog("camera.json", "Save Camera");
 					if (dialogResult.bSuccess)
 					{
-						this->parameters.camera.filePath = dialogResult.filePath;
+						this->parameters.camera.filePath = ofFilePath::makeRelative(ofToDataPath(""), dialogResult.filePath);
 						this->saveCamera();
 					}
 				}
@@ -262,7 +262,7 @@ bool ofApp::imGui()
 					auto dialogResult = ofSystemLoadDialog("Load Camera", false, ofToDataPath("settings"));
 					if (dialogResult.bSuccess)
 					{
-						this->parameters.camera.filePath = dialogResult.filePath;
+						this->parameters.camera.filePath = ofFilePath::makeRelative(ofToDataPath(""), dialogResult.filePath);
 						this->loadCamera();
 					}
 				}
@@ -358,6 +358,6 @@ void ofApp::saveSettings(const string & filePath)
 	ofxPreset::Serializer::Serialize(json, this->parameters);
 
 	ofFile file(filePath, ofFile::WriteOnly);
-	file << json;
+	file << json.dump(4);
 }
 

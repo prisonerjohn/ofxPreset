@@ -1,1 +1,16 @@
-{"aspectRatio":1.33333337306976,"distance":638.579467773438,"drag":0.899999976158142,"farClip":6235.38330078125,"forceAspectRatio":false,"fov":60.0,"lensOffset":"0, 0","mouseInputEnabled":true,"mouseMiddleButtonEnabled":true,"nearClip":6.2353835105896,"ortho":false,"target":"0, 0, 0","transform":"0.763345, -0.425927, 0.485685,        0\n0.634005, 0.638124, -0.436847,        0\n-0.123862, 0.641392, 0.757149,        0\n-310.419,  475.701,  291.775,        1","translationKey":109}
+{
+    "aspectRatio": 1.33333337306976,
+    "distance": 383.948333740234,
+    "drag": 0.899999976158142,
+    "farClip": 6235.38330078125,
+    "forceAspectRatio": false,
+    "fov": 60.0,
+    "lensOffset": "0, 0",
+    "mouseInputEnabled": false,
+    "mouseMiddleButtonEnabled": true,
+    "nearClip": 6.2353835105896,
+    "ortho": false,
+    "target": "0, 0, 0",
+    "transform": "0.688322, -0.425927, 0.587195,        0\n0.718219, 0.513809, -0.469215,        0\n-0.101855, 0.744706, 0.659575,        0\n-109.464,  318.598,  184.199,        1",
+    "translationKey": 109
+}
