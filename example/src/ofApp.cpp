@@ -287,27 +287,19 @@ bool ofApp::imGui()
 					}
 				}
 
+				static vector<string> labels = { "None", "Color", "Texture" };
+
 				ImGui::SetNextTreeNodeOpen(true, ImGuiSetCond_Appearing);
 				if (ImGui::TreeNode("Fill"))
 				{
-					ImGui::Columns(3);
-					ImGui::RadioButton("None", this->parameters.render.fillMode.getRef(), RenderModeNone); ImGui::NextColumn();
-					ImGui::RadioButton("Color", this->parameters.render.fillMode.getRef(), RenderModeColor); ImGui::NextColumn();
-					ImGui::RadioButton("Texture", this->parameters.render.fillMode.getRef(), RenderModeTexture); ImGui::NextColumn();
-					ImGui::Columns(1);
-
+					ofxPreset::Gui::AddRadio(this->parameters.render.fillMode, labels, 3);
 					ImGui::TreePop();
 				}
 
 				ImGui::SetNextTreeNodeOpen(true, ImGuiSetCond_Appearing);
 				if (ImGui::TreeNode("Stroke"))
 				{
-					ImGui::Columns(3);
-					ImGui::RadioButton("None", this->parameters.render.strokeMode.getRef(), RenderModeNone); ImGui::NextColumn();
-					ImGui::RadioButton("Color", this->parameters.render.strokeMode.getRef(), RenderModeColor); ImGui::NextColumn();
-					ImGui::RadioButton("Texture", this->parameters.render.strokeMode.getRef(), RenderModeTexture); ImGui::NextColumn();
-					ImGui::Columns(1);
-
+					ofxPreset::Gui::AddRadio(this->parameters.render.strokeMode, labels, 3);
 					ImGui::TreePop();
 				}
 

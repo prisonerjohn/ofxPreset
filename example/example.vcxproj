@@ -197,7 +197,6 @@
     <ClInclude Include="..\..\ofxImGui\src\ThemeTest.h" />
     <ClInclude Include="..\src\ofxPreset.h" />
     <ClInclude Include="..\src\ofxPreset\Gui.h" />
-    <ClInclude Include="..\src\ofxPreset\Parameter.h" />
     <ClInclude Include="..\src\ofxPreset\Serializer.h" />
     <ClInclude Include="src\ofApp.h" />
   </ItemGroup>
@@ -215,7 +214,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\src\ofxPreset\Gui.inl" />
-    <None Include="..\src\ofxPreset\Parameter.inl" />
     <None Include="..\src\ofxPreset\Serializer.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

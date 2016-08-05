@@ -61,15 +61,15 @@ public:
 	{
 		struct : ofParameterGroup
 		{
-			ofxPreset::Parameter<ofFloatColor> background{ "Background", ofFloatColor::black };
-			ofxPreset::Parameter<ofFloatColor> foreground{ "Foreground", ofFloatColor::crimson };
+			ofParameter<ofFloatColor> background{ "Background", ofFloatColor::black };
+			ofParameter<ofFloatColor> foreground{ "Foreground", ofFloatColor::crimson };
 
 			PARAM_DECLARE("Colors", background, foreground);
 		} colors; 
 		
 		struct : ofParameterGroup
 		{
-			ofxPreset::Parameter<bool> mouseEnabled{ "Mouse Enabled", true, false };
+			ofParameter<bool> mouseEnabled{ "Mouse Enabled", true };
 			ofParameter<string> filePath{ "File Path", "camera.json" };
 
 			PARAM_DECLARE("Camera", mouseEnabled, filePath);
@@ -77,19 +77,19 @@ public:
 
 		struct : ofParameterGroup
 		{
-			ofxPreset::Parameter<bool> enabled{ "Enabled", true, false };
-			ofxPreset::Parameter<float> sizeMin{ "Size Min", 10.0f, 0.0f, 1000.0f };
-			ofxPreset::Parameter<float> sizeMax{ "Size Max", 200.0f, 0.0f, 1000.0f };
-			ofxPreset::Parameter<float> speed{ "Speed", 0.1f, 0.0f, 1.0f };
+			ofParameter<bool> enabled{ "Enabled", true };
+			ofParameter<float> sizeMin{ "Size Min", 10.0f, 0.0f, 1000.0f };
+			ofParameter<float> sizeMax{ "Size Max", 200.0f, 0.0f, 1000.0f };
+			ofParameter<float> speed{ "Speed", 0.1f, 0.0f, 1.0f };
 
 			PARAM_DECLARE("Mesh", enabled, sizeMin, sizeMax, speed);
 		} mesh;
 
 		struct : ofParameterGroup
 		{
-			ofxPreset::Parameter<int> fillMode{ "Fill Mode", RenderModeTexture, true };   // Auto-update because we're using radio buttons in the gui.
-			ofxPreset::Parameter<int> strokeMode{ "Stroke Mode", RenderModeNone, true };  // Auto-update because we're using radio buttons in the gui.
-			ofxPreset::Parameter<bool> preview{ "Preview", false, true };                 // Auto-update because we can close the window from its toolbar.
+			ofParameter<int> fillMode{ "Fill Mode", RenderModeTexture };   // Auto-update because we're using radio buttons in the gui.
+			ofParameter<int> strokeMode{ "Stroke Mode", RenderModeNone };  // Auto-update because we're using radio buttons in the gui.
+			ofParameter<bool> preview{ "Preview", false };                 // Auto-update because we can close the window from its toolbar.
 			ofParameter<string> imagePath{ "Image Path", "texture.jpg" };
 
 			PARAM_DECLARE("Render", fillMode, strokeMode, preview, imagePath);

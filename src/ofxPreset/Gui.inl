@@ -3,6 +3,9 @@
 namespace ofxPreset
 {
 	//--------------------------------------------------------------
+	static Gui::WindowOpen windowOpen;
+
+	//--------------------------------------------------------------
 	Gui::Settings::Settings()
 		: windowPos(kGuiMargin, kGuiMargin)
 		, windowSize(ofVec2f::zero())
@@ -18,9 +21,15 @@ namespace ofxPreset
 	}
 
 	//--------------------------------------------------------------
-	bool Gui::BeginWindow(Parameter<bool> & parameter, Settings & settings, bool collapse)
+	bool Gui::BeginWindow(ofParameter<bool> & parameter, Settings & settings, bool collapse)
 	{
-		return Gui::BeginWindow(parameter.getName(), settings, collapse, parameter.getRef());
+		// Reference this ofParameter until EndWindow().
+		windowOpen.parameter = dynamic_pointer_cast<ofParameter<bool>>(parameter.newReference());
+		windowOpen.value = parameter.get();
+
+		auto result = Gui::BeginWindow(parameter.getName(), settings, collapse, &windowOpen.value);
+		parameter = windowOpen.value;
+		return result;
 	}
 
 	//--------------------------------------------------------------
@@ -55,6 +64,9 @@ namespace ofxPreset
 		settings.windowSize = ImGui::GetWindowSize();
 		ImGui::End();
 
+		// Unlink the referenced ofParameter.
+		windowOpen.parameter.reset();
+
 		const auto bounds = ofRectangle(settings.windowPos, settings.windowSize.x, settings.windowSize.y);
 		settings.mouseOverGui |= bounds.inside(ofGetMouseX(), ofGetMouseY());
 	}
@@ -87,43 +99,43 @@ namespace ofxPreset
 			}
 
 			// Parameter, try everything we know how to handle.
-			auto parameterVec2f = dynamic_pointer_cast<Parameter<ofVec2f>>(parameter);
+			auto parameterVec2f = dynamic_pointer_cast<ofParameter<ofVec2f>>(parameter);
 			if (parameterVec2f)
 			{
 				Gui::AddParameter(*parameterVec2f);
 				continue;
 			}
-			auto parameterVec3f = dynamic_pointer_cast<Parameter<ofVec3f>>(parameter);
+			auto parameterVec3f = dynamic_pointer_cast<ofParameter<ofVec3f>>(parameter);
 			if (parameterVec3f)
 			{
 				Gui::AddParameter(*parameterVec3f);
 				continue;
 			}
-			auto parameterVec4f = dynamic_pointer_cast<Parameter<ofVec4f>>(parameter);
+			auto parameterVec4f = dynamic_pointer_cast<ofParameter<ofVec4f>>(parameter);
 			if (parameterVec4f)
 			{
 				Gui::AddParameter(*parameterVec4f);
 				continue;
 			}
-			auto parameterFloatColor = dynamic_pointer_cast<Parameter<ofFloatColor>>(parameter);
+			auto parameterFloatColor = dynamic_pointer_cast<ofParameter<ofFloatColor>>(parameter);
 			if (parameterFloatColor)
 			{
 				Gui::AddParameter(*parameterFloatColor);
 				continue;
 			}
-			auto parameterFloat = dynamic_pointer_cast<Parameter<float>>(parameter);
+			auto parameterFloat = dynamic_pointer_cast<ofParameter<float>>(parameter);
 			if (parameterFloat)
 			{
 				Gui::AddParameter(*parameterFloat);
 				continue;
 			}
-			auto parameterInt = dynamic_pointer_cast<Parameter<int>>(parameter);
+			auto parameterInt = dynamic_pointer_cast<ofParameter<int>>(parameter);
 			if (parameterInt)
 			{
 				Gui::AddParameter(*parameterInt);
 				continue;
 			}
-			auto parameterBool = dynamic_pointer_cast<Parameter<bool>>(parameter);
+			auto parameterBool = dynamic_pointer_cast<ofParameter<bool>>(parameter);
 			if (parameterBool)
 			{
 				Gui::AddParameter(*parameterBool);
@@ -141,110 +153,140 @@ namespace ofxPreset
 	}
 
 	//--------------------------------------------------------------
-	bool Gui::AddParameter(Parameter<glm::tvec2<int>> & parameter)
+	bool Gui::AddParameter(ofParameter<glm::tvec2<int>> & parameter)
 	{
-		if (ImGui::SliderInt2(parameter.getName().c_str(), glm::value_ptr(*parameter.getRef()), parameter.getMin().x, parameter.getMax().x))
+		static glm::tvec2<int> tmpRef;
+		
+		tmpRef = parameter.get();
+		if (ImGui::SliderInt2(parameter.getName().c_str(), glm::value_ptr(tmpRef), parameter.getMin().x, parameter.getMax().x))
 		{
-			parameter.update();
+			parameter.set(tmpRef);
 			return true;
 		}
 		return false;
 	}
 
 	//--------------------------------------------------------------
-	bool Gui::AddParameter(Parameter<glm::tvec3<int>> & parameter)
+	bool Gui::AddParameter(ofParameter<glm::tvec3<int>> & parameter)
 	{
-		if (ImGui::SliderInt3(parameter.getName().c_str(), glm::value_ptr(*parameter.getRef()), parameter.getMin().x, parameter.getMax().x))
+		static glm::tvec3<int> tmpRef;
+		
+		tmpRef = parameter.get();
+		if (ImGui::SliderInt3(parameter.getName().c_str(), glm::value_ptr(tmpRef), parameter.getMin().x, parameter.getMax().x))
 		{
-			parameter.update();
+			parameter.set(tmpRef);
 			return true;
 		}
 		return false;
 	}
 
 	//--------------------------------------------------------------
-	bool Gui::AddParameter(Parameter<glm::tvec4<int>> & parameter)
+	bool Gui::AddParameter(ofParameter<glm::tvec4<int>> & parameter)
 	{
-		if (ImGui::SliderInt4(parameter.getName().c_str(), glm::value_ptr(*parameter.getRef()), parameter.getMin().x, parameter.getMax().x))
+		static glm::tvec4<int> tmpRef;
+		
+		tmpRef = parameter.get();
+		if (ImGui::SliderInt4(parameter.getName().c_str(), glm::value_ptr(tmpRef), parameter.getMin().x, parameter.getMax().x))
 		{
-			parameter.update();
+			parameter.set(tmpRef);
 			return true;
 		}
 		return false;
 	}
 
 	//--------------------------------------------------------------
-	bool Gui::AddParameter(Parameter<glm::vec2> & parameter)
+	bool Gui::AddParameter(ofParameter<glm::vec2> & parameter)
 	{
-		if (ImGui::SliderFloat2(parameter.getName().c_str(), glm::value_ptr(*parameter.getRef()), parameter.getMin().x, parameter.getMax().x))
+		static glm::vec2 tmpRef;
+		
+		tmpRef = parameter.get();
+		if (ImGui::SliderFloat2(parameter.getName().c_str(), glm::value_ptr(tmpRef), parameter.getMin().x, parameter.getMax().x))
 		{
-			parameter.update();
+			parameter.set(tmpRef);
 			return true;
 		}
 		return false;
 	}
 
 	//--------------------------------------------------------------
-	bool Gui::AddParameter(Parameter<glm::vec3> & parameter)
+	bool Gui::AddParameter(ofParameter<glm::vec3> & parameter)
 	{
-		if (ImGui::SliderFloat3(parameter.getName().c_str(), glm::value_ptr(*parameter.getRef()), parameter.getMin().x, parameter.getMax().x))
+		static glm::vec3 tmpRef;
+		
+		tmpRef = parameter.get();
+		if (ImGui::SliderFloat3(parameter.getName().c_str(), glm::value_ptr(tmpRef), parameter.getMin().x, parameter.getMax().x))
 		{
-			parameter.update();
+			parameter.set(tmpRef);
 			return true;
 		}
 		return false;
 	}
 
 	//--------------------------------------------------------------
-	bool Gui::AddParameter(Parameter<glm::vec4> & parameter)
+	bool Gui::AddParameter(ofParameter<glm::vec4> & parameter)
 	{
-		if (ImGui::SliderFloat4(parameter.getName().c_str(), glm::value_ptr(*parameter.getRef()), parameter.getMin().x, parameter.getMax().x))
+		static glm::vec4 tmpRef;
+		
+		tmpRef = parameter.get();
+		if (ImGui::SliderFloat4(parameter.getName().c_str(), glm::value_ptr(tmpRef), parameter.getMin().x, parameter.getMax().x))
 		{
-			parameter.update();
+			parameter.set(tmpRef);
 			return true;
 		}
 		return false;
 	}
 
 	//--------------------------------------------------------------
-	bool Gui::AddParameter(Parameter<ofVec2f> & parameter)
+	bool Gui::AddParameter(ofParameter<ofVec2f> & parameter)
 	{
-		if (ImGui::SliderFloat2(parameter.getName().c_str(), parameter.getRef()->getPtr(), parameter.getMin().x, parameter.getMax().x))
+		static ofVec2f tmpRef;
+		
+		tmpRef = parameter.get();
+		if (ImGui::SliderFloat2(parameter.getName().c_str(), tmpRef.getPtr(), parameter.getMin().x, parameter.getMax().x))
 		{
-			parameter.update();
+			parameter.set(tmpRef);
 			return true;
 		}
 		return false;
 	}
 
 	//--------------------------------------------------------------
-	bool Gui::AddParameter(Parameter<ofVec3f> & parameter)
+	bool Gui::AddParameter(ofParameter<ofVec3f> & parameter)
 	{
-		if (ImGui::SliderFloat3(parameter.getName().c_str(), parameter.getRef()->getPtr(), parameter.getMin().x, parameter.getMax().x))
+		static ofVec3f tmpRef;
+		
+		tmpRef = parameter.get();
+		if (ImGui::SliderFloat3(parameter.getName().c_str(), tmpRef.getPtr(), parameter.getMin().x, parameter.getMax().x))
 		{
-			parameter.update();
+			parameter.set(tmpRef);
 			return true;
 		}
 		return false;
 	}
 
 	//--------------------------------------------------------------
-	bool Gui::AddParameter(Parameter<ofVec4f> & parameter)
+	bool Gui::AddParameter(ofParameter<ofVec4f> & parameter)
 	{
-		if (ImGui::SliderFloat4(parameter.getName().c_str(), parameter.getRef()->getPtr(), parameter.getMin().x, parameter.getMax().x))
+		static ofVec4f tmpRef;
+		
+		tmpRef = parameter.get();
+		if (ImGui::SliderFloat4(parameter.getName().c_str(), tmpRef.getPtr(), parameter.getMin().x, parameter.getMax().x))
 		{
-			parameter.update();
+			parameter.set(tmpRef);
 			return true;
 		}
 		return false;
 	}
 
 	//--------------------------------------------------------------
-	bool Gui::AddParameter(Parameter<ofFloatColor> & parameter)
+	bool Gui::AddParameter(ofParameter<ofFloatColor> & parameter)
 	{
-		if (ImGui::ColorEdit4(parameter.getName().c_str(), &(parameter.getRef()->r)))
+		static ofFloatColor tmpRef;
+		
+		tmpRef = parameter.get();
+		if (ImGui::ColorEdit4(parameter.getName().c_str(), &tmpRef.r))
 		{
-			parameter.update();
+			parameter.set(tmpRef);
 			return true;
 		}
 		return false;
@@ -252,47 +294,73 @@ namespace ofxPreset
 
 	//--------------------------------------------------------------
 	template<typename ParameterType>
-	bool Gui::AddParameter(Parameter<ParameterType> & parameter)
+	bool Gui::AddParameter(ofParameter<ParameterType> & parameter)
 	{
+		static ParameterType tmpRef;
+
 		const auto & info = typeid(ParameterType);
+		tmpRef = parameter.get();
 		if (info == typeid(float))
 		{
-			if (ImGui::SliderFloat(parameter.getName().c_str(), (float *)parameter.getRef(), parameter.getMin(), parameter.getMax()))
+			if (ImGui::SliderFloat(parameter.getName().c_str(), (float *)&tmpRef, parameter.getMin(), parameter.getMax()))
 			{
-				parameter.update();
+				parameter.set(tmpRef);
 				return true;
 			}
 			return false;
 		}
 		if (info == typeid(int))
 		{
-			if (ImGui::SliderInt(parameter.getName().c_str(), (int *)parameter.getRef(), parameter.getMin(), parameter.getMax()))
+			if (ImGui::SliderInt(parameter.getName().c_str(), (int *)&tmpRef, parameter.getMin(), parameter.getMax()))
 			{
-				parameter.update();
+				parameter.set(tmpRef);
 				return true;
 			}
 			return false;
 		}
 		if (info == typeid(bool))
 		{
-			if (ImGui::Checkbox(parameter.getName().c_str(), (bool *)parameter.getRef()))
+			if (ImGui::Checkbox(parameter.getName().c_str(), (bool *)&tmpRef))
 			{
-				parameter.update();
+				parameter.set(tmpRef);
 				return true;
 			}
 			return false;
 		}
-		ofLogWarning("Gui::AddParameter") << "Could not create GUI element for type " << info.name();
+
+		ofLogWarning(__FUNCTION__) << "Could not create GUI element for type " << info.name();
 		return false;
 	}
 
 	//--------------------------------------------------------------
-	bool Gui::AddRange(const string & name, Parameter<float> & parameterMin, Parameter<float> & parameterMax, float speed)
+	bool Gui::AddRadio(ofParameter<int> & parameter, vector<string> labels, int columns)
 	{
-		if (ImGui::DragFloatRange2(name.c_str(), parameterMin.getRef(), parameterMax.getRef(), speed, parameterMin.getMin(), parameterMax.getMax()))
+		static int tmpRef;
+
+		tmpRef = parameter.get();
+		auto result = false;
+		ImGui::Columns(columns);
+		for (int i = 0; i < labels.size(); ++i)
 		{
-			parameterMin.update();
-			parameterMax.update();
+			result |= ImGui::RadioButton(labels[i].c_str(), &tmpRef, i); ImGui::NextColumn();
+		}
+		ImGui::Columns(1);
+		parameter.set(tmpRef);
+		return result;
+	}
+
+	//--------------------------------------------------------------
+	bool Gui::AddRange(const string & name, ofParameter<float> & parameterMin, ofParameter<float> & parameterMax, float speed)
+	{
+		static float tmpRefMin;
+		static float tmpRefMax;
+
+		tmpRefMin = parameterMin.get();
+		tmpRefMax = parameterMax.get();
+		if (ImGui::DragFloatRange2(name.c_str(), &tmpRefMin, &tmpRefMax, speed, parameterMin.getMin(), parameterMax.getMax()))
+		{
+			parameterMin.set(tmpRefMin);
+			parameterMax.set(tmpRefMax);
 			return true;
 		}
 		return false;
